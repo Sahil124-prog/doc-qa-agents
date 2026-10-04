@@ -1,0 +1,40 @@
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: var(--bg);
+}
+
+.field {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+}
+
+.field-lavender {
+    width: 620px;
+    height: 620px;
+    top: -180px;
+    right: -120px;
+    background: #b7abff;
+    opacity: 0.75;
+}
+
+.field-marigold {
+    width: 520px;
+    height: 520px;
+    bottom: -220px;
+    left: 18%;
+    background: #ffd66b;
+    opacity: 0.55;
+}
+
+.field-mint {
+    width: 420px;
+    height: 420px;
+    top: 30%;
+    left: -160px;
+    background: #8debcb;
+    opacity: 0.5;
+}

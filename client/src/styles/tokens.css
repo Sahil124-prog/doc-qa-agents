@@ -1,0 +1,37 @@
+/* The whole design system in one place: change a value here, it changes everywhere. */
+:root {
+    /* Colours */
+    --bg: #e9e7fb;
+    /* lavender page background */
+    --ink: #14122b;
+    /* text, outlines, shadows */
+    --ink-soft: #4a4766;
+    /* secondary text */
+    --paper: #ffffff;
+    /* cards and sheets */
+    --indigo: #4a36f5;
+    /* primary actions */
+    --indigo-soft: #c9c2ff;
+    /* soft accents, "rewrote" step */
+    --marigold: #ffc21a;
+    /* highlighter: citations and key facts */
+    --mint: #19c28b;
+    /* ready / found */
+    --rose: #f2466e;
+    /* failed / not found */
+
+    /* Fonts */
+    --font-display: "Syne", sans-serif;
+    --font-ui: "Bricolage Grotesque", system-ui, sans-serif;
+
+    /* The "cut-out paper" look: thick outline + hard offset shadow */
+    --edge: 2px solid var(--ink);
+    --shadow-sm: 3px 3px 0 var(--ink);
+    --shadow: 5px 5px 0 var(--ink);
+    --shadow-lg: 7px 7px 0 var(--ink);
+
+    /* Corners */
+    --radius-sm: 10px;
+    --radius: 14px;
+    --radius-lg: 18px;
+}
