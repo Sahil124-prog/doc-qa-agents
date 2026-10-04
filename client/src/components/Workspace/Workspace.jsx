@@ -7,12 +7,20 @@ import Desk from "../Desk/Desk.jsx";
 import "./Workspace.css";
 
 export default function Workspace({ user, onLogout }) {
-  const { documents, loading, uploading, uploadError, upload } = useDocuments();
+  const { documents, loading, uploading, error, upload, remove } =
+    useDocuments();
 
   // Which document questions are limited to ("" = all documents)
   const [scopeId, setScopeId] = useState("");
 
   const readyDocuments = documents.filter((doc) => doc.status === "ready");
+
+  // If the deleted document was the one being searched, go back to "All documents"
+  async function handleDelete(id) {
+    const deleted = await remove(id);
+    if (deleted && scopeId === id) setScopeId("");
+    return deleted;
+  }
 
   return (
     <div className="workspace">
@@ -38,8 +46,9 @@ export default function Workspace({ user, onLogout }) {
           documents={documents}
           loading={loading}
           uploading={uploading}
-          uploadError={uploadError}
+          error={error}
           onUpload={upload}
+          onDelete={handleDelete}
           scopeId={scopeId}
           onSelect={setScopeId}
         />

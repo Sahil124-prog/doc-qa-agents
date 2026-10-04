@@ -1,22 +1,30 @@
 .folder {
     position: relative;
-    display: block;
-    width: 100%;
-    text-align: left;
     background: var(--paper);
     border: var(--edge);
     border-radius: 0 var(--radius) var(--radius) var(--radius);
-    padding: 14px 16px;
     margin-top: 30px;
     box-shadow: var(--shadow);
 }
 
-.folder[aria-disabled="true"] {
-    cursor: default;
-}
-
 .folder.is-selected {
     background: #fff6d6;
+}
+
+/* The clickable main area of the folder */
+.folder-body {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 0;
+    border-radius: inherit;
+    padding: 14px 52px 14px 16px;
+    /* room on the right for the delete button */
+}
+
+.folder-body[aria-disabled="true"] {
+    cursor: default;
 }
 
 /* The tab on top of the folder shows the status */
@@ -72,4 +80,46 @@
 
 .folder-failed .folder-meta {
     color: var(--rose);
+}
+
+/* ---------- Delete button: appears on hover or keyboard focus ---------- */
+
+.folder-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s, color 0.15s;
+}
+
+.folder:hover .folder-delete,
+.folder:focus-within .folder-delete,
+.folder-delete.is-confirming {
+    opacity: 1;
+}
+
+.folder-delete:hover {
+    background: #ffe3ea;
+}
+
+.folder-delete.is-confirming {
+    background: var(--rose);
+    color: #fff;
+    font-size: 13px;
+}
+
+/* Touch screens have no hover, so always show the button there */
+@media (hover: none) {
+    .folder-delete {
+        opacity: 1;
+    }
 }

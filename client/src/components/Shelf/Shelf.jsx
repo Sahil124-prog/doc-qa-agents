@@ -7,8 +7,9 @@ export default function Shelf({
   documents,
   loading,
   uploading,
-  uploadError,
+  error,
   onUpload,
+  onDelete,
   scopeId,
   onSelect,
 }) {
@@ -75,7 +76,7 @@ export default function Shelf({
       />
 
       <AnimatePresence>
-        {uploadError && (
+        {error && (
           <motion.p
             className="shelf-error"
             role="alert"
@@ -83,7 +84,7 @@ export default function Shelf({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
           >
-            {uploadError}
+            {error}
           </motion.p>
         )}
       </AnimatePresence>
@@ -104,6 +105,7 @@ export default function Shelf({
               doc={doc}
               selected={scopeId === doc._id}
               onSelect={() => onSelect(scopeId === doc._id ? "" : doc._id)}
+              onDelete={() => onDelete(doc._id)}
             />
           ))}
         </AnimatePresence>
