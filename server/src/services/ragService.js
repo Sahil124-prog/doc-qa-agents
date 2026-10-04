@@ -45,10 +45,16 @@ function buildUserMessage(question, sources) {
   return `Sources:\n\n${sourceText}\n\nQuestion: ${question}`;
 }
 
-export async function generateAnswer(question, sources) {
+export async function generateAnswer(question, sources, { reminder } = {}) {
+  let userContent = buildUserMessage(question, sources);
+
+  if (reminder) {
+    userContent += `\n\nIMPORTANT: ${reminder}`;
+  }
+
   const response = await llm.invoke([
     { role: "system", content: SYSTEM_PROMPT },
-    { role: "user", content: buildUserMessage(question, sources) },
+    { role: "user", content: userContent },
   ]);
 
   return response.text.trim();

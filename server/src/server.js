@@ -27,15 +27,30 @@ app.use("/api/auth", authRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/ask", askRoutes);
 
-
-
 app.use((err, req, res, next) => {
-  const status = err.status || (err.name === "MulterError" ? 400 : 500);
+  // AI provider quota / rate limit
+  if (err.status === 429) {
+    console.error("AI rate limit hit:", err.message);
+    return res
+      .status(503)
+      .json({
+        message:
+          "The AI service is busy right now. Please try again in a minute.",
+      });
+  }
+
+  // Errors we chose to show to users: our own (expose = true) and multer's
+  const isUserError = err.expose === true || err.name === "MulterError";
+  const status = isUserError ? err.status || 400 : 500;
+
   if (status === 500) console.error(err);
+
   res
     .status(status)
     .json({ message: status === 500 ? "Something went wrong" : err.message });
 });
+
+
 
 const PORT = process.env.PORT || 5000;
 

@@ -18,6 +18,7 @@ function fileFilter(req, file, cb) {
   } else {
     const err = new Error("Only PDF files are allowed");
     err.status = 400;
+    err.expose = true;
     cb(err);
   }
 }
