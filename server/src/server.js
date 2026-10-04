@@ -3,6 +3,8 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import documentRoutes from "./routes/documentRoutes.js";
+import DocumentModel from "./models/Document.js";
+
 
 
 const app = express();
@@ -35,6 +37,19 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 await connectDB();
+
+const { modifiedCount } = await DocumentModel.updateMany(
+  { status: "processing" },
+  {
+    status: "failed",
+    errorMessage:
+      "Processing was interrupted by a server restart. Please upload again.",
+  },
+);
+if (modifiedCount > 0)
+  console.log(`Marked ${modifiedCount} interrupted document(s) as failed`);
+
+
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`),
 );
