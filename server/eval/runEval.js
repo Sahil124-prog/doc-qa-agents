@@ -18,9 +18,25 @@ if (!email) {
 const questions = JSON.parse(
   fs.readFileSync(new URL("./questions.json", import.meta.url), "utf8"),
 );
-const PAUSE_MS = 3000; // breathing room between calls, to stay under Groq's per-minute limits
+const PAUSE_MS = 8000;  // breathing room between calls, to stay under Groq's per-minute limits
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// If we hit the rate limit anyway, wait and try the same call again (up to 3 attempts)
+async function withRateLimitRetry(fn) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      const rateLimited = err.status === 429 || String(err.message).startsWith("429");
+      if (!rateLimited || attempt === 3) throw err;
+      console.log("   rate limited, waiting 20 seconds...");
+      await sleep(20000);
+    }
+  }
+}
+
+
 const percent = (part, whole) =>
   whole === 0 ? "n/a" : `${Math.round((part / whole) * 100)}%`;
 
@@ -82,7 +98,9 @@ for (const [i, q] of questions.entries()) {
   for (const [name, run] of Object.entries(SYSTEMS)) {
     const started = Date.now();
     try {
-      const result = await run(q.question, userId);
+        const result = await withRateLimitRetry(() =>
+              run(q.question, userId),
+        );
       row[name] = {
         ...score(q, result),
         seconds: (Date.now() - started) / 1000,

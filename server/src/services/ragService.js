@@ -45,6 +45,14 @@ function buildUserMessage(question, sources) {
   return `Sources:\n\n${sourceText}\n\nQuestion: ${question}`;
 }
 
+// gpt-oss models sometimes cite as 【1】 or 【2†L1-L3】 instead of [1]. Convert to our format.
+function normalizeCitations(text) {
+  return text
+    .replace(/【\s*(\d+)[^】]*】/g, "[$1]")
+    .replace(/\[(\d+)†[^\]]*\]/g, "[$1]");
+}
+
+
 export async function generateAnswer(question, sources, { reminder } = {}) {
   let userContent = buildUserMessage(question, sources);
 
@@ -57,7 +65,7 @@ export async function generateAnswer(question, sources, { reminder } = {}) {
     { role: "user", content: userContent },
   ]);
 
-  return response.text.trim();
+  return normalizeCitations(response.text.trim());
 }
 
 export function extractCitations(answer, sources) {

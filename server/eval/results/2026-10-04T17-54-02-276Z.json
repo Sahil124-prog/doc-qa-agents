@@ -1,0 +1,529 @@
+{
+  "summary": {
+    "rag": {
+      "Right page retrieved": "100%",
+      "Correct answer": "100%",
+      "Right page cited": "100%",
+      "Refused when not in docs": "100%",
+      "Overall": "100%",
+      "Avg seconds": "2.8",
+      "Errors": 0
+    },
+    "agent": {
+      "Right page retrieved": "100%",
+      "Correct answer": "100%",
+      "Right page cited": "100%",
+      "Refused when not in docs": "100%",
+      "Overall": "100%",
+      "Avg seconds": "3.7",
+      "Errors": 0
+    }
+  },
+  "rows": [
+    {
+      "id": 1,
+      "question": "How many days of paid annual leave do employees get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.29,
+        "retries": 0,
+        "answer": "Employees are entitled to 18 days of paid annual leave each calendar year[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.848,
+        "retries": 0,
+        "answer": "Employees are entitled to 18 days of paid annual leave each calendar year[1]."
+      }
+    },
+    {
+      "id": 2,
+      "question": "how many vacation days do i get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 1.848,
+        "retries": 0,
+        "answer": "You are entitled to 18 days of paid annual leave each calendar year. [1]"
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.253,
+        "retries": 0,
+        "answer": "You are entitled to 18 days of paid annual leave each calendar year. [1]"
+      }
+    },
+    {
+      "id": 3,
+      "question": "Can I carry unused leave over to next year?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.308,
+        "retries": 0,
+        "answer": "Yes, you can carry over up to 5 unused annual leave days to the next calendar year; any carried‑over days must be used before 31 March or they lapse[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.652,
+        "retries": 0,
+        "answer": "Yes. Up to 5 unused annual leave days can be carried over to the next calendar year, but they must be used before 31 March or they lapse[1]."
+      }
+    },
+    {
+      "id": 4,
+      "question": "when do i need a doctor's note for being sick?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.008,
+        "retries": 0,
+        "answer": "A medical certificate from a registered doctor is required when sick leave exceeds 2 consecutive days[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.949,
+        "retries": 0,
+        "answer": "A medical certificate from a registered doctor is required when sick leave exceeds 2 consecutive days[1]."
+      }
+    },
+    {
+      "id": 5,
+      "question": "How much maternity leave do birthing parents get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.542,
+        "retries": 0,
+        "answer": "Birthing parents receive 26 weeks of paid maternity leave[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.369,
+        "retries": 0,
+        "answer": "Birthing parents receive 26 weeks of paid maternity leave[1]."
+      }
+    },
+    {
+      "id": 6,
+      "question": "how long is paternity leave?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.395,
+        "retries": 0,
+        "answer": "Non‑birthing parents are entitled to 4 weeks of paid parental (paternity) leave, which must be taken within six months of the child’s birth or adoption[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.815,
+        "retries": 0,
+        "answer": "Non‑birthing parents are entitled to 4 weeks of paid parental (paternity) leave, which must be taken within six months of the child’s birth or adoption[1]."
+      }
+    },
+    {
+      "id": 7,
+      "question": "Can I work from home?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.126,
+        "retries": 0,
+        "answer": "Yes. Employees may work remotely up to three days per week, with Tuesdays and Thursdays designated as office days for all Pune‑based teams. Fully remote arrangements, however, require written approval from both the employee’s manager and the Head of People Operations[3]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.383,
+        "retries": 0,
+        "answer": "Yes. Employees may work remotely up to three days per week, with Tuesdays and Thursdays designated as office days for all Pune‑based teams. Fully remote arrangements require written approval from both the employee’s manager and the Head of People Operations[3]."
+      }
+    },
+    {
+      "id": 8,
+      "question": "do i get paid for internet when working remotely?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.756,
+        "retries": 0,
+        "answer": "Yes. Remote employees receive a monthly internet allowance of INR 1,500 paid with their salary[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.539,
+        "retries": 0,
+        "answer": "Yes. Remote employees receive a monthly internet allowance of INR 1,500 paid with their salary[1]."
+      }
+    },
+    {
+      "id": 9,
+      "question": "how much bonus can i get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.526,
+        "retries": 0,
+        "answer": "Employees are eligible for an annual performance bonus of up to 15 percent of their annual base salary[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.416,
+        "retries": 0,
+        "answer": "Employees are eligible for an annual performance bonus of up to 15 percent of their annual base salary[1]."
+      }
+    },
+    {
+      "id": 10,
+      "question": "What is the daily food allowance on an international trip?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.818,
+        "retries": 0,
+        "answer": "The daily food allowance on an international business trip is USD 60[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.452,
+        "retries": 0,
+        "answer": "The daily food allowance on an international business trip is USD 60[1]."
+      }
+    },
+    {
+      "id": 11,
+      "question": "how long do i have to submit expense receipts?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.944,
+        "retries": 0,
+        "answer": "Expense receipts must be submitted within 30 days of the expense [1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.545,
+        "retries": 0,
+        "answer": "Expense receipts must be submitted within 30 days of the expense [1]."
+      }
+    },
+    {
+      "id": 12,
+      "question": "how often do we get a new laptop?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.563,
+        "retries": 0,
+        "answer": "Laptops are refreshed every 3 years. [3]"
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.362,
+        "retries": 0,
+        "answer": "Laptops are refreshed every 3 years. [3]"
+      }
+    },
+    {
+      "id": 13,
+      "question": "how long do i have to stay after i quit?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.335,
+        "retries": 0,
+        "answer": "You must give 60 days’ notice after you are confirmed, or 15 days’ notice if you are still within the 6‑month probation period[3]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 4.086,
+        "retries": 0,
+        "answer": "You must give 60 days’ notice after you are confirmed, or 15 days’ notice if you are still within the 6‑month probation period[3]."
+      }
+    },
+    {
+      "id": 14,
+      "question": "how much money do i get for courses each year?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 5.442,
+        "retries": 0,
+        "answer": "You receive an annual learning budget of INR 40,000 for courses, certifications, books and conferences[2]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.834,
+        "retries": 0,
+        "answer": "You receive an annual learning budget of INR 40,000 for courses, certifications, books and conferences[2]."
+      }
+    },
+    {
+      "id": 15,
+      "question": "How many approvals does a pull request need?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.732,
+        "retries": 0,
+        "answer": "A pull request must receive **at least 2 approvals**[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.908,
+        "retries": 0,
+        "answer": "A pull request needs at least 2 approvals[1]."
+      }
+    },
+    {
+      "id": 16,
+      "question": "On which days do releases go out?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.672,
+        "retries": 0,
+        "answer": "Releases are deployed to production every Tuesday and Thursday at 11:00 AM IST[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.155,
+        "retries": 0,
+        "answer": "Releases are deployed to production every Tuesday and Thursday at 11:00 AM IST[1]."
+      }
+    },
+    {
+      "id": 17,
+      "question": "how quickly do i have to answer a page when on call?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.094,
+        "retries": 0,
+        "answer": "You must acknowledge a page within 15 minutes. [1]"
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.498,
+        "retries": 0,
+        "answer": "You must acknowledge a page within 15 minutes. [1]"
+      }
+    },
+    {
+      "id": 18,
+      "question": "what's the extra pay for being on call?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.259,
+        "retries": 0,
+        "answer": "Engineers receive an on‑call allowance of INR 5,000 for each week they are on call[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.77,
+        "retries": 0,
+        "answer": "Engineers receive an on‑call allowance of INR 5,000 for each week they are on call[1]."
+      }
+    },
+    {
+      "id": 19,
+      "question": "how fast must critical security bugs be patched?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.839,
+        "retries": 0,
+        "answer": "Critical security bugs must be patched within 48 hours[2]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.039,
+        "retries": 0,
+        "answer": "Critical security bugs must be patched within 48 hours[2]."
+      }
+    },
+    {
+      "id": 20,
+      "question": "When can I get access to the production database?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.193,
+        "retries": 0,
+        "answer": "Production database access is not granted during your first 30 days. After that period you may request read‑only access with a written reason, and the request is reviewed each quarter[1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.112,
+        "retries": 0,
+        "answer": "Production database access is not granted during your first 30 days. After that period you may request read‑only access with a written reason, and the request is reviewed each quarter[1]."
+      }
+    },
+    {
+      "id": 21,
+      "question": "What is the company's stock price?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 2.592,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 6.234,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 22,
+      "question": "Who is the CEO of Nimbus?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 2.431,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 5.835,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 23,
+      "question": "What is the office Wi-Fi password?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 1.883,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 6.091,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 24,
+      "question": "How many employees work at Nimbus?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 5.712,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 5.964,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 25,
+      "question": "Is there a gym at the office?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 2.65,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 5.65,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    }
+  ]
+}
