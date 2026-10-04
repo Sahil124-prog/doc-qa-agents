@@ -1,0 +1,493 @@
+{
+  "summary": {
+    "rag": {
+      "Right page retrieved": "100%",
+      "Correct answer": "100%",
+      "Right page cited": "20%",
+      "Refused when not in docs": "100%",
+      "Overall": "100%",
+      "Avg seconds": "2.4",
+      "Errors": 0
+    },
+    "agent": {
+      "Right page retrieved": "55%",
+      "Correct answer": "25%",
+      "Right page cited": "25%",
+      "Refused when not in docs": "100%",
+      "Overall": "40%",
+      "Avg seconds": "3.4",
+      "Errors": 9
+    }
+  },
+  "rows": [
+    {
+      "id": 1,
+      "question": "How many days of paid annual leave do employees get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.118,
+        "retries": 0,
+        "answer": "Employees are entitled to 18 days of paid annual leave each calendar year【1】."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": false,
+        "cited": false,
+        "seconds": 4.083,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 2,
+      "question": "how many vacation days do i get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.526,
+        "retries": 0,
+        "answer": "You are entitled to 18 days of paid annual leave each calendar year. [1]"
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.034,
+        "retries": 0,
+        "answer": "You are entitled to 18 days of paid annual leave each calendar year. [1]"
+      }
+    },
+    {
+      "id": 3,
+      "question": "Can I carry unused leave over to next year?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.521,
+        "retries": 0,
+        "answer": "Yes. Up to 5 unused annual leave days can be carried over to the next calendar year, but they must be used before 31 March or they lapse【1】."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": false,
+        "cited": false,
+        "seconds": 3.287,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 4,
+      "question": "when do i need a doctor's note for being sick?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.575,
+        "retries": 0,
+        "answer": "A medical certificate from a registered doctor is required when sick leave exceeds 2 consecutive days【1】."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": false,
+        "cited": false,
+        "seconds": 4.18,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 5,
+      "question": "How much maternity leave do birthing parents get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.9,
+        "retries": 0,
+        "answer": "Birthing parents receive 26 weeks of paid maternity leave【1】."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 4.049,
+        "retries": 0,
+        "answer": "Birthing parents receive 26 weeks of paid maternity leave [1]."
+      }
+    },
+    {
+      "id": 6,
+      "question": "how long is paternity leave?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.457,
+        "retries": 0,
+        "answer": "Non‑birthing parents are entitled to 4 weeks of paid parental (paternity) leave, which must be taken within six months of the child’s birth or adoption【1】."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": false,
+        "cited": false,
+        "seconds": 3.388,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 7,
+      "question": "Can I work from home?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.686,
+        "retries": 0,
+        "answer": "Yes. Employees may work remotely up to three days per week, with Tuesdays and Thursdays designated as office days for all Pune‑based teams. Fully remote arrangements, however, require written approval from both the employee’s manager and the Head of People Operations【3】."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": false,
+        "cited": false,
+        "seconds": 3.625,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 8,
+      "question": "do i get paid for internet when working remotely?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.218,
+        "retries": 0,
+        "answer": "Yes. Remote employees receive a monthly internet allowance of INR 1,500 paid with their salary【1】."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": false,
+        "cited": false,
+        "seconds": 2.491,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 9,
+      "question": "how much bonus can i get?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.289,
+        "retries": 0,
+        "answer": "Employees are eligible for an annual performance bonus of up to 15 percent of their annual base salary【1】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7150, Requested 1025. Please try again in 1.3125s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 2.933
+      }
+    },
+    {
+      "id": 10,
+      "question": "What is the daily food allowance on an international trip?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.787,
+        "retries": 0,
+        "answer": "The daily food allowance for an international business trip is USD 60【1】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7366, Requested 961. Please try again in 2.4525s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 2.673
+      }
+    },
+    {
+      "id": 11,
+      "question": "how long do i have to submit expense receipts?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.677,
+        "retries": 0,
+        "answer": "Expense receipts must be submitted within 30 days of the expense [1]."
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.933,
+        "retries": 0,
+        "answer": "Expense receipts must be submitted within 30 days of the expense [1]."
+      }
+    },
+    {
+      "id": 12,
+      "question": "how often do we get a new laptop?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 2.557,
+        "retries": 0,
+        "answer": "Laptops are refreshed every 3 years. [3]"
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 3.141,
+        "retries": 0,
+        "answer": "New laptops are refreshed every 3 years [3]"
+      }
+    },
+    {
+      "id": 13,
+      "question": "how long do i have to stay after i quit?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 3.11,
+        "retries": 0,
+        "answer": "You must give 60 days’ notice after you are confirmed, or 15 days’ notice if you are still within the 6‑month probation period【3】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7138, Requested 934. Please try again in 539.999999ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 2.072
+      }
+    },
+    {
+      "id": 14,
+      "question": "how much money do i get for courses each year?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.586,
+        "retries": 0,
+        "answer": "You receive an annual learning budget of INR 40,000 for courses, certifications, books and conferences【2†L1-L3】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7364, Requested 922. Please try again in 2.145s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 2.203
+      }
+    },
+    {
+      "id": 15,
+      "question": "How many approvals does a pull request need?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.567,
+        "retries": 0,
+        "answer": "A pull request needs at least 2 approvals【1】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7602, Requested 929. Please try again in 3.9825s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 2.302
+      }
+    },
+    {
+      "id": 16,
+      "question": "On which days do releases go out?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.594,
+        "retries": 0,
+        "answer": "Releases are deployed to production on Tuesdays and Thursdays at 11:00 AM IST【1】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7272, Requested 734. Please try again in 45ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 3.378
+      }
+    },
+    {
+      "id": 17,
+      "question": "how quickly do i have to answer a page when on call?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 1.708,
+        "retries": 0,
+        "answer": "You must acknowledge a page within 15 minutes. [1]"
+      },
+      "agent": {
+        "retrieved": true,
+        "correct": true,
+        "cited": true,
+        "seconds": 1.962,
+        "retries": 0,
+        "answer": "You must acknowledge a page within 15 minutes. [1]"
+      }
+    },
+    {
+      "id": 18,
+      "question": "what's the extra pay for being on call?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 2.838,
+        "retries": 0,
+        "answer": "Engineers receive an on‑call allowance of INR 5,000 for each week they are on call【1†L7-L9】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7208, Requested 990. Please try again in 1.485s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 1.479
+      }
+    },
+    {
+      "id": 19,
+      "question": "how fast must critical security bugs be patched?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 1.189,
+        "retries": 0,
+        "answer": "Critical security bugs must be patched within 48 hours【2】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7272, Requested 847. Please try again in 892.5ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 3.628
+      }
+    },
+    {
+      "id": 20,
+      "question": "When can I get access to the production database?",
+      "answerable": true,
+      "rag": {
+        "retrieved": true,
+        "correct": true,
+        "cited": false,
+        "seconds": 1.733,
+        "retries": 0,
+        "answer": "Production database access is not granted during your first 30 days. After that period you may request read‑only access with a written reason, and the request is reviewed each quarter【1】."
+      },
+      "agent": {
+        "error": "429 {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kj2b2k89f0hr44wwv1m37bzk` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7613, Requested 885. Please try again in 3.735s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}",
+        "seconds": 2.12
+      }
+    },
+    {
+      "id": 21,
+      "question": "What is the company's stock price?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 3.325,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 5.257,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 22,
+      "question": "Who is the CEO of Nimbus?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 1.428,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 4.665,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 23,
+      "question": "What is the office Wi-Fi password?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 1.5,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 5.515,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 24,
+      "question": "How many employees work at Nimbus?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 1.784,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 4.943,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    },
+    {
+      "id": 25,
+      "question": "Is there a gym at the office?",
+      "answerable": false,
+      "rag": {
+        "refused": true,
+        "seconds": 2.397,
+        "retries": 0,
+        "answer": "I couldn't find this in your documents."
+      },
+      "agent": {
+        "refused": true,
+        "seconds": 5.481,
+        "retries": 2,
+        "answer": "I couldn't find this in your documents."
+      }
+    }
+  ]
+}
