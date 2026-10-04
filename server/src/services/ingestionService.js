@@ -7,6 +7,10 @@ import { embeddings } from "../config/ai.js";                         // NEW
 
 // ---------- Part 1: PDF → chunks (unchanged) ----------
 
+import fs from "node:fs/promises";
+import DocumentModel from "../models/Document.js";
+
+
 const splitter = new RecursiveCharacterTextSplitter({
   chunkSize: 800,
   chunkOverlap: 150,
@@ -55,4 +59,43 @@ export function getVectorStore() {
 
 export async function embedAndStoreChunks(chunks) {
   await getVectorStore().addDocuments(chunks);
+}
+
+
+// ---------- Part 3: the full pipeline for one uploaded document ----------
+
+export async function processDocument(doc, filePath) {
+  const documentId = doc._id.toString();
+
+  try {
+    const { pageCount, chunks } = await loadAndSplitPdf(filePath, {
+      documentId,
+      userId: doc.userId.toString(),
+      fileName: doc.fileName,
+    });
+
+    if (chunks.length === 0) {
+      throw new Error("No readable text found in this PDF. It may be a scanned image.");
+    }
+
+    await embedAndStoreChunks(chunks);
+
+    await DocumentModel.findByIdAndUpdate(doc._id, {
+      status: "ready",
+      pageCount,
+      chunkCount: chunks.length,
+    });
+    console.log(`Document ${documentId} ready: ${chunks.length} chunks`);
+  } catch (err) {
+    console.error(`Document ${documentId} failed:`, err.message);
+
+    await getChunksCollection().deleteMany({ documentId });
+
+    await DocumentModel.findByIdAndUpdate(doc._id, {
+      status: "failed",
+      errorMessage: err.message,
+    });
+  } finally {
+    await fs.unlink(filePath).catch(() => {});
+  }
 }
