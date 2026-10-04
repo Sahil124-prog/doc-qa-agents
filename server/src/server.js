@@ -4,6 +4,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import documentRoutes from "./routes/documentRoutes.js";
 import DocumentModel from "./models/Document.js";
+import askRoutes from "./routes/askRoutes.js";
 
 
 
@@ -24,6 +25,8 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/documents", documentRoutes);
+app.use("/api/ask", askRoutes);
+
 
 
 app.use((err, req, res, next) => {
