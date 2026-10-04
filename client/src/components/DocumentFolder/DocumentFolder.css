@@ -1,0 +1,75 @@
+.folder {
+    position: relative;
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--paper);
+    border: var(--edge);
+    border-radius: 0 var(--radius) var(--radius) var(--radius);
+    padding: 14px 16px;
+    margin-top: 30px;
+    box-shadow: var(--shadow);
+}
+
+.folder[aria-disabled="true"] {
+    cursor: default;
+}
+
+.folder.is-selected {
+    background: #fff6d6;
+}
+
+/* The tab on top of the folder shows the status */
+.folder-tab {
+    position: absolute;
+    top: -24px;
+    left: -2px;
+    height: 24px;
+    padding: 3px 12px 0;
+    border: var(--edge);
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    font-size: 12px;
+    font-weight: 700;
+    transform-origin: bottom;
+}
+
+.folder-ready .folder-tab {
+    background: var(--mint);
+}
+
+.folder-failed .folder-tab {
+    background: var(--rose);
+    color: #fff;
+}
+
+/* Moving stripes while the document is being processed */
+.folder-processing .folder-tab {
+    background: repeating-linear-gradient(-45deg, var(--indigo-soft) 0 8px, #fff 8px 16px);
+    background-size: 23px 23px;
+    animation: folder-stripes 0.8s linear infinite;
+}
+
+@keyframes folder-stripes {
+    to {
+        background-position: 23px 0;
+    }
+}
+
+.folder-name {
+    display: block;
+    font-weight: 700;
+    font-size: 17px;
+    overflow-wrap: anywhere;
+}
+
+.folder-meta {
+    display: block;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+}
+
+.folder-failed .folder-meta {
+    color: var(--rose);
+}

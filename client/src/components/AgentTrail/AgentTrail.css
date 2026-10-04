@@ -1,0 +1,80 @@
+.trail {
+    background: rgba(255, 255, 255, 0.6);
+    border: var(--edge);
+    border-radius: var(--radius-lg);
+    padding: 18px 18px 4px;
+}
+
+.trail-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 16px;
+    white-space: nowrap;
+    margin-bottom: 14px;
+}
+
+.trail-list {
+    list-style: none;
+    padding: 0;
+}
+
+.trail-step {
+    position: relative;
+    padding: 0 0 16px 32px;
+}
+
+/* The line connecting one dot to the next */
+.trail-step::before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 22px;
+    bottom: -2px;
+    width: 2px;
+    background: var(--ink);
+}
+
+.trail-step:last-child::before {
+    display: none;
+}
+
+.trail-dot {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: var(--edge);
+    background: var(--paper);
+}
+
+.trail-miss .trail-dot {
+    background: var(--rose);
+}
+
+.trail-rewrite .trail-dot {
+    background: var(--indigo-soft);
+}
+
+.trail-found .trail-dot {
+    background: var(--mint);
+}
+
+.trail-done .trail-dot {
+    background: var(--ink);
+}
+
+.trail-step-title {
+    display: block;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.trail-step-detail {
+    display: block;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+}

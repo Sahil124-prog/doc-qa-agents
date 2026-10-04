@@ -1,0 +1,96 @@
+.sheet {
+    background: var(--paper);
+    border: var(--edge);
+    border-radius: var(--radius-lg);
+    padding: 28px 30px;
+    box-shadow: var(--shadow-lg);
+}
+
+.sheet-answer {
+    font-size: 21px;
+    line-height: 1.6;
+    font-weight: 500;
+    max-width: 62ch;
+}
+
+/* Highlighter band behind key numbers; its width animates from 0% to 100% */
+.answer-fact {
+    color: inherit;
+    background-color: transparent;
+    background-image: linear-gradient(var(--marigold), var(--marigold));
+    background-repeat: no-repeat;
+    background-position: left 88%;
+}
+
+.cite {
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--marigold);
+    border: 1.5px solid var(--ink);
+    padding: 1px 9px;
+    border-radius: 999px;
+    margin-left: 6px;
+    vertical-align: 3px;
+    box-shadow: 2px 2px 0 var(--ink);
+    transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+}
+
+.cite:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--ink);
+}
+
+.cite.is-open {
+    background: var(--ink);
+    color: var(--marigold);
+}
+
+.sheet-source {
+    overflow: hidden;
+}
+
+.sheet-source-inner {
+    margin-top: 20px;
+    background: #f4f2ff;
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.sheet-source-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--indigo);
+    margin-bottom: 6px;
+}
+
+/* "Not found" version of the sheet */
+.sheet.is-empty {
+    background: #fff4f6;
+}
+
+.sheet-empty-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--rose);
+    margin-bottom: 8px;
+}
+
+.sheet-hint {
+    margin-top: 10px;
+    color: var(--ink-soft);
+}
+
+@media (max-width: 600px) {
+    .sheet {
+        padding: 20px;
+    }
+
+    .sheet-answer {
+        font-size: 19px;
+    }
+}

@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "dev": "node --watch-path=./src --env-file=.env src/server.js",
+    "dev": "nodemon",
     "start": "node --env-file=.env src/server.js"
   },
   "keywords": [],
@@ -26,5 +26,8 @@
     "mongoose": "^9.10.4",
     "multer": "^2.4.0",
     "pdf-parse": "^2.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

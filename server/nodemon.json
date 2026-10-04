@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "js",
+  "legacyWatch": true,
+  "exec": "node --env-file=.env src/server.js"
+}

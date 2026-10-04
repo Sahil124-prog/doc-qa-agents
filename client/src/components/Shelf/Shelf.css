@@ -1,0 +1,76 @@
+.shelf {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.shelf-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+}
+
+.shelf-drop {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    text-align: left;
+    border: 2px dashed var(--ink);
+    border-radius: 16px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.55);
+    margin-bottom: 12px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.shelf-drop.is-dragging {
+    background: #fff6d6;
+    border-style: solid;
+}
+
+.shelf-drop strong {
+    display: block;
+    font-size: 16px;
+}
+
+.shelf-drop-hint {
+    font-size: 14px;
+    color: var(--ink-soft);
+}
+
+.shelf-drop-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--indigo);
+    border: var(--edge);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 24px;
+}
+
+.shelf-error {
+    color: var(--rose);
+    font-weight: 700;
+    overflow: hidden;
+}
+
+.shelf-list {
+    overflow-y: auto;
+    padding: 4px 10px 12px 2px;
+    /* room for shadows and folder tabs */
+    margin-top: 6px;
+}
+
+.shelf-empty {
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-top: 12px;
+}

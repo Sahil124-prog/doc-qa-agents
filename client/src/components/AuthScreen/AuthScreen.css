@@ -1,0 +1,205 @@
+.auth {
+    min-height: 100%;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: 56px;
+    padding: 96px 72px 48px;
+    position: relative;
+}
+
+.auth-brand {
+    position: absolute;
+    top: 24px;
+    left: 72px;
+}
+
+/* ---------- Left side ---------- */
+
+.auth-headline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(38px, 4.2vw, 58px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+}
+
+.auth-headline-line {
+    display: block;
+}
+
+.auth-sub {
+    font-size: 21px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 34ch;
+    margin: 26px 0 34px;
+}
+
+.auth-demo {
+    max-width: 560px;
+}
+
+.auth-demo-question {
+    display: inline-block;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 16px 16px 16px 4px;
+    padding: 12px 18px;
+    font-weight: 500;
+    font-size: 17px;
+    margin-bottom: 14px;
+}
+
+.auth-demo-answer {
+    background: var(--paper);
+    border: var(--edge);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-lg);
+    font-size: 18px;
+    line-height: 1.55;
+    font-weight: 500;
+}
+
+/* The highlighter: a yellow band whose width grows from 0% to 100% */
+.auth-demo-highlight {
+    background-image: linear-gradient(var(--marigold), var(--marigold));
+    background-repeat: no-repeat;
+    background-position: left 85%;
+}
+
+.auth-demo-cite {
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--marigold);
+    border: 1.5px solid var(--ink);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-left: 6px;
+    vertical-align: 3px;
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+.auth-demo-steps {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.auth-demo-step {
+    font-size: 13px;
+    font-weight: 700;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    padding: 4px 10px;
+    background: var(--paper);
+}
+
+.auth-demo-step.step-1 {
+    background: var(--indigo-soft);
+}
+
+.auth-demo-step.step-2 {
+    background: var(--mint);
+}
+
+/* ---------- Right side: the card ---------- */
+
+.auth-card {
+    background: var(--paper);
+    border: var(--edge);
+    border-radius: 24px;
+    padding: 34px;
+    box-shadow: 9px 9px 0 var(--ink);
+    max-width: 480px;
+    width: 100%;
+    justify-self: center;
+}
+
+.auth-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg);
+    border: var(--edge);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 26px;
+}
+
+.auth-toggle-option {
+    position: relative;
+    border: 0;
+    background: none;
+    padding: 10px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    transition: color 0.2s;
+}
+
+.auth-toggle-option.is-active {
+    color: #fff;
+}
+
+.auth-toggle-pill {
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    border-radius: var(--radius-sm);
+}
+
+.auth-toggle-label {
+    position: relative;
+    /* sits above the sliding pill */
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-field {
+    overflow: hidden;
+    /* needed for the height animation of the name field */
+    padding: 4px 4px 14px;
+    /* room for the focus ring */
+    margin: 0 -4px;
+}
+
+.auth-field label {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+.auth-error {
+    color: var(--rose);
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.auth-submit {
+    width: 100%;
+    padding: 15px;
+    font-size: 17px;
+    margin-top: 4px;
+}
+
+/* ---------- Small screens: stack the two sides ---------- */
+
+@media (max-width: 900px) {
+    .auth {
+        grid-template-columns: 1fr;
+        padding: 88px 20px 40px;
+        gap: 40px;
+    }
+
+    .auth-brand {
+        left: 20px;
+    }
+
+    .auth-demo {
+        display: none;
+    }
+}

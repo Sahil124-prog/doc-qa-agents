@@ -1,0 +1,55 @@
+.workspace {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+.workspace-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 36px;
+}
+
+.workspace-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: 500;
+}
+
+.workspace-avatar {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: var(--edge);
+    background: var(--indigo-soft);
+    font-family: var(--font-display);
+    font-weight: 800;
+}
+
+.workspace-main {
+    display: grid;
+    grid-template-columns: 330px 1fr;
+    gap: 32px;
+    padding: 4px 36px 28px;
+    min-height: 0;
+    /* lets the two columns scroll inside the screen */
+}
+
+@media (max-width: 900px) {
+    .workspace {
+        height: auto;
+    }
+
+    .workspace-header {
+        padding: 16px 20px;
+    }
+
+    .workspace-main {
+        grid-template-columns: 1fr;
+        padding: 4px 20px 24px;
+    }
+}

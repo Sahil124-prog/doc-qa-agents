@@ -1,32 +1,41 @@
 import { useEffect, useState } from "react";
-import { api } from "./api.js";
+import { clearSession, getSavedUser, saveSession } from "./api.js";
 import Background from "./components/Background/Background.jsx";
-import Brand from "./components/Brand/Brand.jsx";
+import AuthScreen from "./components/AuthScreen/AuthScreen.jsx";
+import Workspace from "./components/Workspace/Workspace.jsx";
 
 export default function App() {
-  const [status, setStatus] = useState("checking…");
+  // Start logged in if a session was saved earlier
+  const [user, setUser] = useState(getSavedUser);
 
+  // api.js fires "auth:expired" when the server says our token is no longer valid
   useEffect(() => {
-    api("/health")
-      .then((data) => setStatus(data.status))
-      .catch((err) => setStatus(`error: ${err.message}`));
+    function handleExpired() {
+      clearSession();
+      setUser(null);
+    }
+    window.addEventListener("auth:expired", handleExpired);
+    return () => window.removeEventListener("auth:expired", handleExpired);
   }, []);
+
+  function handleAuth(session) {
+    saveSession(session);
+    setUser(session.user);
+  }
+
+  function handleLogout() {
+    clearSession();
+    setUser(null);
+  }
 
   return (
     <>
       <Background />
-      <div style={{ padding: 40 }}>
-        <Brand />
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 48,
-            marginTop: 40,
-          }}
-        >
-          Backend: {status}
-        </h1>
-      </div>
+      {user ? (
+        <Workspace user={user} onLogout={handleLogout} />
+      ) : (
+        <AuthScreen onAuth={handleAuth} />
+      )}
     </>
   );
 }
