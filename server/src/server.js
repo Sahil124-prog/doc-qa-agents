@@ -5,12 +5,14 @@ import authRoutes from "./routes/authRoutes.js";
 import documentRoutes from "./routes/documentRoutes.js";
 import DocumentModel from "./models/Document.js";
 import askRoutes from "./routes/askRoutes.js";
-
+import rateLimit from "express-rate-limit";
 
 
 const app = express();
 
-app.use(cors());
+app.set("trust proxy", 1);
+app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
+
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -23,9 +25,21 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-app.use("/api/auth", authRoutes);
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  message: { message: "Too many attempts. Please try again later." },
+});
+const askLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 60,
+  message: { message: "Question limit reached. Please try again later." },
+});
+
+app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/documents", documentRoutes);
-app.use("/api/ask", askRoutes);
+app.use("/api/ask", askLimiter, askRoutes);
 
 app.use((err, req, res, next) => {
   // AI provider quota / rate limit
