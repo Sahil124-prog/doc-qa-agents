@@ -10,7 +10,7 @@ import helmet from "helmet";
 
 const app = express();
 
-app.set("trust proxy", 2);
+app.set("trust proxy", 3);
 app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
 
@@ -27,9 +27,7 @@ app.get("/api/health", (req, res) => {
 });
 
 
-app.get("/api/debug-ip", (req, res) => {
-  res.json({ ip: req.ip, xff: req.headers["x-forwarded-for"] });
-});
+
 
 
 const authLimiter = rateLimit({
