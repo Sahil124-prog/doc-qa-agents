@@ -10,7 +10,8 @@ import rateLimit from "express-rate-limit";
 
 const app = express();
 
-app.set("trust proxy", 1);
+app.set("trust proxy", 2);
+
 app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
 
 app.use(express.json());
