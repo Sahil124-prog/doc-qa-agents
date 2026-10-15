@@ -35,7 +35,8 @@ export async function api(path, { method = "GET", body, formData } = {}) {
     requestBody = JSON.stringify(body);
   }
 
-  const response = await fetch(`/api${path}`, {
+  const BASE_URL = import.meta.env.VITE_API_URL ?? "";
+  const response = await fetch(`${BASE_URL}/api${path}`, {
     method,
     headers,
     body: requestBody,
