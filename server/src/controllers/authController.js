@@ -3,22 +3,35 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 function createToken(userId) {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    algorithm: "HS256",
+    expiresIn: "7d",
+  });
 }
 
 export async function signup(req, res) {
-  const { name, email, password } = req.body;
+    const { name, email, password } = req.body ?? {};
 
   if (!name || !email || !password) {
     return res
       .status(400)
       .json({ message: "Name, email and password are required" });
   }
-  if (password.length < 6) {
-    return res
-      .status(400)
-      .json({ message: "Password must be at least 6 characters" });
-  }
+    if ([name, email, password].some((v) => typeof v !== "string")) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
+    if (
+      name.length > 60 ||
+      email.length > 254 ||
+      !/^\S+@\S+\.\S+$/.test(email)
+    ) {
+      return res.status(400).json({ message: "Invalid name or email" });
+    }
+    if (password.length < 6 || password.length > 72) {
+      return res
+        .status(400)
+        .json({ message: "Password must be 6 to 72 characters" });
+    }
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,11 +51,18 @@ export async function signup(req, res) {
 }
 
 export async function login(req, res) {
-  const { email, password } = req.body;
+  const { email, password } = req.body ?? {};
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
+    if (
+      typeof email !== "string" ||
+      typeof password !== "string" ||
+      !email ||
+      !password
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
 
   const user = await User.findOne({ email: email.toLowerCase().trim() }).select(
     "+password",

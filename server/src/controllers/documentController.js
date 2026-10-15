@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import DocumentModel from "../models/Document.js";
+import fs from "node:fs/promises";
+
+
 import {
   processDocument,
   getChunksCollection,
@@ -11,6 +14,25 @@ export async function uploadDocument(req, res) {
       .status(400)
       .json({ message: "Please upload a PDF in the 'file' field" });
   }
+
+    const count = await DocumentModel.countDocuments({ userId: req.userId });
+
+      
+    if (count >= 5) {
+      await fs.unlink(req.file.path).catch(() => {});
+      return res.status(403).json({
+        message: "Document limit reached (5). Delete one to upload another.",
+      });
+    }
+
+
+    const fh = await fs.open(req.file.path, "r");
+    const { buffer } = await fh.read(Buffer.alloc(5), 0, 5, 0);
+    await fh.close();
+    if (buffer.toString() !== "%PDF-") {
+      await fs.unlink(req.file.path).catch(() => {});
+      return res.status(400).json({ message: "File is not a valid PDF" });
+    }
 
   const doc = await DocumentModel.create({
     userId: req.userId,

@@ -77,6 +77,10 @@ export async function processDocument(doc, filePath) {
     if (chunks.length === 0) {
       throw new Error("No readable text found in this PDF. It may be a scanned image.");
     }
+    
+    if (pageCount > 100) {
+      throw new Error("PDF is too long (maximum 100 pages).");
+    }
 
     await embedAndStoreChunks(chunks);
 

@@ -6,15 +6,15 @@ import documentRoutes from "./routes/documentRoutes.js";
 import DocumentModel from "./models/Document.js";
 import askRoutes from "./routes/askRoutes.js";
 import rateLimit from "express-rate-limit";
-
+import helmet from "helmet";
 
 const app = express();
 
 app.set("trust proxy", 2);
-
+app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
 
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 
 app.use((req, res, next) => {
   console.log(req.method, req.url);
