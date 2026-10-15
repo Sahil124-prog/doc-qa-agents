@@ -15,24 +15,18 @@ const lastValue = (old, update) => update; // NEW: helper reducer, "new value re
 const appendList = (old, update) => old.concat(update); // NEW: helper reducer, "add to the list"
 
 const AgentState = Annotation.Root({
-  // Inputs (set once when the graph starts)
   question: Annotation(),
   userId: Annotation(),
   documentId: Annotation(),
-
-  // Working fields
+  chatHistory: Annotation({ reducer: lastValue, default: () => [] }),
   searchQuery: Annotation(),
   sources: Annotation(),
   isRelevant: Annotation(),
-  retryCount: Annotation({ reducer: lastValue, default: () => 0 }), // NEW
-
-  // Outputs
+  retryCount: Annotation({ reducer: lastValue, default: () => 0 }),
   answer: Annotation(),
   citations: Annotation(),
-
-  // Logs: every node ADDS to these instead of replacing
   trace: Annotation({ reducer: appendList, default: () => [] }),
-  searchQueries: Annotation({ reducer: appendList, default: () => [] }), // NEW
+  searchQueries: Annotation({ reducer: appendList, default: () => [] }),
 });
 
 // ---------- Settings ----------
@@ -54,7 +48,6 @@ Return only the search query, with no explanation and no quotes.`;
 
 const CITATION_REMINDER =
   "Your previous answer had no source citations. Every fact must be followed by its source number, like [1]. If the sources do not contain the answer, reply exactly with the not-found sentence from the rules.";
-
 
 // ---------- Nodes ----------
 
@@ -161,7 +154,6 @@ async function generate(state) {
   return { answer, citations, trace };
 }
 
-
 async function noAnswer() {
   return {
     answer: NOT_FOUND_MESSAGE,
@@ -200,11 +192,16 @@ const graph = new StateGraph(AgentState)
 
 // ---------- Public function ----------
 
-export async function runAgent(question, userId, { documentId } = {}) {
+export async function runAgent(
+  question,
+  userId,
+  { documentId, chatHistory = [] } = {},
+) {
   return graph.invoke({
     question,
     userId,
     documentId,
+    chatHistory,
     searchQuery: question,
   });
 }
