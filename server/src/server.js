@@ -27,6 +27,11 @@ app.get("/api/health", (req, res) => {
 });
 
 
+app.get("/api/debug-ip", (req, res) => {
+  res.json({ ip: req.ip, xff: req.headers["x-forwarded-for"] });
+});
+
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
