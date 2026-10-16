@@ -1,4 +1,5 @@
 import { runAgent } from "../agent/qaAgent.js";
+import { checkQuestion, classifyQuestion } from "../services/questionGuard.js";
 
 const MAX_QUESTION_LENGTH = 1000;
 
@@ -19,17 +20,30 @@ export async function ask(req, res) {
     return res.status(400).json({ message: "documentId must be a string" });
   }
 
-    const result = await runAgent(question, req.userId, { documentId });
-
-    res.json({
-      answer: result.answer,
-      citations: result.citations,
-      sources: result.sources.map(({ text, ...rest }) => ({
-        ...rest,
-        preview: text.slice(0, 150),
-      })),
-      searchQueries: result.searchQueries,
-      retries: result.retryCount,
-      trace: result.trace,
+  let guard = checkQuestion(question);
+  if (guard.allowed) guard = await classifyQuestion(question);
+  if (!guard.allowed) {
+    return res.json({
+      kind: "guard",
+      answer: guard.message,
+      citations: [],
+      sources: [],
+      searchQueries: [],
+      retries: 0,
+      trace: [`guard: ${guard.reason}`],
     });
+  }
+
+  const result = await runAgent(question, req.userId, { documentId });
+  res.json({
+    answer: result.answer,
+    citations: result.citations,
+    sources: result.sources.map(({ text, ...rest }) => ({
+      ...rest,
+      preview: text.slice(0, 150),
+    })),
+    searchQueries: result.searchQueries,
+    retries: result.retryCount,
+    trace: result.trace,
+  });
 }
