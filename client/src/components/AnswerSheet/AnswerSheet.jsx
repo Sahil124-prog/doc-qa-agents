@@ -31,6 +31,7 @@ export default function AnswerSheet({ answer, citations, sources, isGuard }) {
 
   const openSource = sources.find((s) => s.label === openLabel);
   let factIndex = 0;
+  const seenPages = new Set(); // one badge per page, even if two passages came from it
 
   // Text pieces: numbers get a highlighter sweep, one after another
   function renderText(text, key) {
@@ -67,6 +68,10 @@ export default function AnswerSheet({ answer, citations, sources, isGuard }) {
             : part.labels.map((label) => {
                 const citation = citations.find((c) => c.label === label);
                 if (!citation) return null; // the model cited a source that doesn't exist
+
+                const pageKey = `${citation.fileName}-${citation.pageNumber}`;
+                if (seenPages.has(pageKey)) return null; // already showed this page
+                seenPages.add(pageKey);
                 return (
                   <button
                     key={`${i}-${label}`}
