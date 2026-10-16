@@ -53,17 +53,24 @@ function normalizeCitations(text) {
 }
 
 
-export async function generateAnswer(question, sources, { reminder } = {}) {
+export async function generateAnswer(
+  question,
+  sources,
+  { reminder, chatHistory = [] } = {},
+) {
   let userContent = buildUserMessage(question, sources);
 
   if (reminder) {
     userContent += `\n\nIMPORTANT: ${reminder}`;
   }
 
-  const response = await llm.invoke([
+  const messages = [
     { role: "system", content: SYSTEM_PROMPT },
+    ...chatHistory,
     { role: "user", content: userContent },
-  ]);
+  ];
+
+  const response = await llm.invoke(messages);
 
   return normalizeCitations(response.text.trim());
 }

@@ -7,6 +7,8 @@ export async function ask(req, res) {
   const question =
     typeof req.body?.question === "string" ? req.body.question.trim() : "";
   const documentId = req.body?.documentId;
+  const rawHistory = req.body?.chatHistory;
+
 
   if (!question) {
     return res.status(400).json({ message: "Please provide a question" });
@@ -34,7 +36,14 @@ export async function ask(req, res) {
     });
   }
 
-  const result = await runAgent(question, req.userId, { documentId });
+  const chatHistory = Array.isArray(rawHistory)
+    ? rawHistory.slice(-4) // last 2 turns = 4 messages max
+    : [];
+
+  const result = await runAgent(question, req.userId, {
+    documentId,
+    chatHistory,
+  });
   res.json({
     answer: result.answer,
     citations: result.citations,

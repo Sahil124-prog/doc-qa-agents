@@ -10,6 +10,7 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
   const [exchanges, setExchanges] = useState([]); // [{ id, question, status, result, error }]
   const endRef = useRef(null);
 
+  const [chatHistory, setChatHistory] = useState([]);
   const asking = exchanges.some((ex) => ex.status === "loading");
   const hasDocuments = readyDocuments.length > 0;
 
@@ -39,9 +40,14 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
     try {
       const result = await api("/ask", {
         method: "POST",
-        body: { question: text, documentId: scopeId || undefined },
+        body: { question: text, documentId: scopeId || undefined, chatHistory },
       });
       updateExchange(id, { status: "done", result });
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "user", content: text },
+        { role: "assistant", content: result.answer },
+      ]);
     } catch (err) {
       updateExchange(id, { status: "error", error: err.message });
     }
