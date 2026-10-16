@@ -23,10 +23,12 @@ function splitAnswer(answer) {
   return parts;
 }
 
-export default function AnswerSheet({ answer, citations, sources }) {
+export default function AnswerSheet({ answer, citations, sources, isGuard }) {
   const [openLabel, setOpenLabel] = useState(null);
 
   const found = citations.length > 0;
+  const empty = !found && !isGuard; // a real "not found", not a guard reply
+
   const openSource = sources.find((s) => s.label === openLabel);
   let factIndex = 0;
 
@@ -51,12 +53,12 @@ export default function AnswerSheet({ answer, citations, sources }) {
 
   return (
     <motion.article
-      className={`sheet ${found ? "" : "is-empty"}`}
+      className={`sheet ${empty ? "is-empty" : ""} ${isGuard ? "is-guard" : ""}`}
       initial={{ opacity: 0, y: 30, rotate: -1 }}
       animate={{ opacity: 1, y: 0, rotate: 0 }}
       transition={{ type: "spring", stiffness: 150, damping: 17 }}
     >
-      {!found && <h4 className="sheet-empty-title">Not in your documents</h4>}
+      {empty && <h4 className="sheet-empty-title">Not in your documents</h4>}
 
       <p className="sheet-answer">
         {splitAnswer(answer).map((part, i) =>
@@ -83,7 +85,7 @@ export default function AnswerSheet({ answer, citations, sources }) {
         )}
       </p>
 
-      {!found && (
+      {empty && (
         <p className="sheet-hint">
           Try asking with different words, or upload the document that covers
           this.

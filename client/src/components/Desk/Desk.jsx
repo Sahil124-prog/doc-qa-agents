@@ -103,11 +103,14 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
                     answer={ex.result.answer}
                     citations={ex.result.citations}
                     sources={ex.result.sources}
+                    isGuard={ex.result.kind === "guard"}
                   />
-                  <AgentTrail
-                    trace={ex.result.trace}
-                    citations={ex.result.citations}
-                  />
+                  {ex.result.kind !== "guard" && (
+                    <AgentTrail
+                      trace={ex.result.trace}
+                      citations={ex.result.citations}
+                    />
+                  )}
                 </div>
               )}
             </motion.div>

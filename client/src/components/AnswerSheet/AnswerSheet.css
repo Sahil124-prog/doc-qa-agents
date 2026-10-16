@@ -85,6 +85,13 @@
     color: var(--ink-soft);
 }
 
+
+.sheet.is-guard {
+    background: #f1efff;
+    /* soft lavender, friendly instead of red */
+}
+
+
 @media (max-width: 600px) {
     .sheet {
         padding: 20px;
