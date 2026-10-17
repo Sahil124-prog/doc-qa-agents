@@ -19,6 +19,40 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [exchanges]);
 
+  // Feature 6: document change hone pe us document ki history load karo
+  useEffect(() => {
+    let ignore = false;
+    const query = scopeId ? `?documentId=${scopeId}` : "";
+
+    api(`/ask/history${query}`)
+      .then((items) => {
+        if (ignore) return; // user ne beech mein doosra document select kar liya
+        setExchanges(
+          items.reverse().map((item) => ({
+            id: item._id,
+            question: item.question,
+            status: "done",
+            fromHistory: true,
+            askedAt: item.createdAt,
+            result: {
+              answer: item.answer,
+              citations: item.citations,
+              sources: [],
+              confidence: item.confidence,
+            },
+          })),
+        );
+        setChatHistory([]); // naya document = nayi conversation
+      })
+      .catch(() => {
+        if (!ignore) setExchanges([]);
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [scopeId]);
+
   function updateExchange(id, changes) {
     setExchanges((current) =>
       current.map((ex) => (ex.id === id ? { ...ex, ...changes } : ex)),
@@ -95,6 +129,17 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
             >
+              {ex.fromHistory && (
+                <span className="desk-earlier">
+                  Earlier ·{" "}
+                  {new Date(ex.askedAt).toLocaleString(undefined, {
+                    day: "numeric",
+                    month: "short",
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}
+                </span>
+              )}
               <h3 className="desk-question">{ex.question}</h3>
 
               {ex.status === "loading" && <Thinking />}
@@ -112,7 +157,7 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
                     isGuard={ex.result.kind === "guard"}
                     confidence={ex.result.confidence}
                   />
-                  {ex.result.kind !== "guard" && (
+                  {ex.result.kind !== "guard" && !ex.fromHistory && (
                     <AgentTrail
                       trace={ex.result.trace}
                       citations={ex.result.citations}

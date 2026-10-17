@@ -1,5 +1,8 @@
 import { runAgent } from "../agent/qaAgent.js";
 import { checkQuestion, classifyQuestion } from "../services/questionGuard.js";
+import QAHistory from "../models/QAHistory.js";
+import mongoose from "mongoose";
+
 
 const MAX_QUESTION_LENGTH = 1000;
 
@@ -8,7 +11,6 @@ export async function ask(req, res) {
     typeof req.body?.question === "string" ? req.body.question.trim() : "";
   const documentId = req.body?.documentId;
   const rawHistory = req.body?.chatHistory;
-
 
   if (!question) {
     return res.status(400).json({ message: "Please provide a question" });
@@ -59,6 +61,16 @@ export async function ask(req, res) {
           ? "medium"
           : "low";
 
+  // Feature 6: Q&A ko history mein save karo (background mein)
+  QAHistory.create({
+    userId: req.userId,
+    documentId: documentId || null,
+    question,
+    answer: result.answer,
+    citations: result.citations,
+    confidence,
+  }).catch((err) => console.error("History save failed:", err.message));
+
   res.json({
     answer: result.answer,
     citations: result.citations,
@@ -71,4 +83,25 @@ export async function ask(req, res) {
     trace: result.trace,
     confidence,
   });
+}
+
+
+
+// Feature 6: ek document ki (ya "All documents" ki) history lao
+export async function getHistory(req, res) {
+  const { documentId } = req.query;
+
+  if (documentId && !mongoose.isValidObjectId(documentId)) {
+    return res.status(400).json({ message: "Invalid documentId" });
+  }
+
+  const history = await QAHistory.find({
+    userId: req.userId,
+    documentId: documentId || null,
+  })
+    .sort({ createdAt: -1 })
+    .limit(20)
+    .lean();
+
+  res.json(history);
 }

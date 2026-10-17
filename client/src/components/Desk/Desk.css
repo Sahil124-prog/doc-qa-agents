@@ -137,6 +137,17 @@
     box-shadow: var(--shadow), 0 0 0 4px var(--indigo-soft);
 }
 
+
+/* Feature 6: label on Q&A loaded from history */
+.desk-earlier {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+}
+
+
 @media (max-width: 1200px) {
     .desk-answer {
         grid-template-columns: 1fr;
