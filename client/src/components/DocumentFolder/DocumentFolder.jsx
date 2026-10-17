@@ -16,6 +16,8 @@ export default function DocumentFolder({ doc, selected, onSelect, onDelete }) {
   const canDelete = doc.status !== "processing"; // never delete while chunks are being written
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
 
   // "Delete?" waits 3 seconds for the second click, then goes back to "×"
   useEffect(() => {
@@ -68,7 +70,17 @@ export default function DocumentFolder({ doc, selected, onSelect, onDelete }) {
       >
         <span className="folder-name">{doc.fileName}</span>
         <span className="folder-meta">{describe(doc)}</span>
-        {doc.summary && (<span className="folder-summary">{doc.summary}</span>)}
+        {doc.summary && (
+          <span
+            className={`folder-summary ${expanded ? "is-expanded" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpanded(!expanded);
+            }}
+          >
+            {doc.summary}
+          </span>
+        )}
       </button>
 
       {canDelete && (

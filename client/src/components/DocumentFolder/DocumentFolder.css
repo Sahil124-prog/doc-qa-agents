@@ -118,14 +118,22 @@
 }
 
 .folder-summary {
-    font-size: 0.72rem;
-    color: #666;
-    margin-top: 4px;
-    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    font-size: 0.72rem;
+    color: #666;
+    margin-top: 4px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.folder-summary.is-expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
 }
 
 
