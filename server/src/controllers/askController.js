@@ -26,8 +26,16 @@ function parseAskRequest(req) {
     return { error: "documentId must be a string" };
   }
 
+  // Only real chat turns reach the LLM: a fake { role: "system" } could override our rules
   const chatHistory = Array.isArray(rawHistory)
-    ? rawHistory.slice(-4) // last 2 turns = 4 messages max
+    ? rawHistory
+        .filter(
+          (m) =>
+            (m?.role === "user" || m?.role === "assistant") &&
+            typeof m.content === "string",
+        )
+        .slice(-4) // last 2 turns = 4 messages max
+        .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }))
     : [];
 
   return { question, documentId, chatHistory };
@@ -152,6 +160,8 @@ export async function askStream(req, res) {
       signal: controller.signal,
     })) {
       if (event.type === "step") send("step", { text: event.text });
+      else if (event.type === "token") send("token", { text: event.text });
+      else if (event.type === "reset") send("reset", {});
       else result = event.state;
     }
 

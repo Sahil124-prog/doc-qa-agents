@@ -130,18 +130,19 @@ async function rewrite(state) {
 }
 
 async function generate(state) {
-  const { question, sources } = state;
+  const { question, sources, chatHistory } = state;
   const trace = ["generate: answer written"];
 
-  let answer = await generateAnswer(question, sources);
+  let answer = await generateAnswer(question, sources, { chatHistory });
   let citations = extractCitations(answer, sources);
 
   // Guard 1: answered but cited nothing → try once more with a reminder
   if (answer !== NOT_FOUND_MESSAGE && citations.length === 0) {
     trace.push("generate: no citations, retrying with a reminder");
-    answer = await generateAnswer(question, sources, {
-      reminder: CITATION_REMINDER,
-    });
+        answer = await generateAnswer(question, sources, {
+          reminder: CITATION_REMINDER,
+          chatHistory,
+        });
     citations = extractCitations(answer, sources);
   }
 
@@ -206,7 +207,7 @@ export async function runAgent(
   });
 }
 
-// Feature 8: same agent, but hands back each step the moment a node finishes
+// Feature 8: same agent, but hands back each step and each answer token live
 export async function* streamAgent(
   question,
   userId,
@@ -214,10 +215,11 @@ export async function* streamAgent(
 ) {
   const stream = await graph.stream(
     { question, userId, documentId, chatHistory, searchQuery: question },
-    { streamMode: ["updates", "values"], signal },
+    { streamMode: ["updates", "messages", "values"], signal },
   );
 
   let finalState;
+  let attemptId = null; // which LLM call the current answer tokens come from
 
   for await (const [mode, chunk] of stream) {
     if (mode === "updates") {
@@ -227,6 +229,22 @@ export async function* streamAgent(
           yield { type: "step", text: line };
         }
       }
+    } else if (mode === "messages") {
+      const [message, meta] = chunk;
+
+      // grade and rewrite also call an LLM: only the answer writer is shown
+      if (meta.langgraph_node !== "generate") continue;
+
+      const text = typeof message.content === "string" ? message.content : "";
+      if (!text) continue;
+
+      // A new LLM call inside generate = the citation retry: wipe the first draft
+      if (attemptId !== null && message.id !== attemptId) {
+        yield { type: "reset" };
+      }
+      attemptId = message.id;
+
+      yield { type: "token", text };
     } else {
       finalState = chunk; // "values" = the full state after each node
     }
@@ -234,3 +252,4 @@ export async function* streamAgent(
 
   yield { type: "result", state: finalState };
 }
+
