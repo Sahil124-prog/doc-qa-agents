@@ -50,7 +50,8 @@ export async function ask(req, res) {
       result.sources.length
     : 0;
   const confidence =
-    result.answer === "I don't know" || !result.sources?.length
+    result.answer === "I couldn't find this in your documents." ||
+    !result.sources?.length
       ? null
       : avgScore > 0.015
         ? "high"
