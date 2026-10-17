@@ -148,11 +148,23 @@ export async function answerQuestion(question, userId, options = {}) {
   const sources = await retrieveChunks(question, userId, options);
 
   if (sources.length === 0) {
-    return { answer: NOT_FOUND_MESSAGE, citations: [], sources: [] };
+    return {
+      answer: NOT_FOUND_MESSAGE,
+      citations: [],
+      sources: [],
+      confidence: null,
+    };
   }
 
-  const answer = await generateAnswer(question, sources);
+  // Confidence — top chunks ke RRF scores ka average
+  const avgScore =
+    sources.reduce((sum, s) => sum + (s.score ?? 0), 0) / sources.length;
+  const confidence =
+    avgScore > 0.015 ? "high" : avgScore > 0.012 ? "medium" : "low";
 
+  const answer = await generateAnswer(question, sources, {
+    chatHistory: options.chatHistory,
+  });
   const citations =
     answer === NOT_FOUND_MESSAGE ? [] : extractCitations(answer, sources);
 
@@ -163,5 +175,6 @@ export async function answerQuestion(question, userId, options = {}) {
       ...rest,
       preview: text.slice(0, 150),
     })),
+    confidence,
   };
 }

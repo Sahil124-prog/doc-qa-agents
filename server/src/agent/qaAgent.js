@@ -31,7 +31,7 @@ const AgentState = Annotation.Root({
 
 // ---------- Settings ----------
 
-const MIN_SCORE = 0.7; // below this, the search clearly failed (tune in evaluation)
+const MIN_SCORE = 0.01; // below this, the search clearly failed (tune in evaluation)
 const MAX_RETRIES = 2; // NEW: at most 2 rewrites = 3 searches in total
 
 const GRADER_PROMPT = `You check whether retrieved document sources can answer a question.

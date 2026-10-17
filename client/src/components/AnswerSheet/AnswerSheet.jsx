@@ -23,7 +23,13 @@ function splitAnswer(answer) {
   return parts;
 }
 
-export default function AnswerSheet({ answer, citations, sources, isGuard }) {
+export default function AnswerSheet({
+  answer,
+  citations,
+  sources,
+  isGuard,
+  confidence,
+}) {
   const [openLabel, setOpenLabel] = useState(null);
 
   const found = citations.length > 0;
@@ -59,6 +65,15 @@ export default function AnswerSheet({ answer, citations, sources, isGuard }) {
       animate={{ opacity: 1, y: 0, rotate: 0 }}
       transition={{ type: "spring", stiffness: 150, damping: 17 }}
     >
+      {confidence && !isGuard && (
+        <span className={`sheet-confidence sheet-confidence--${confidence}`}>
+          {confidence === "high"
+            ? "✓ High confidence"
+            : confidence === "medium"
+              ? "~ Medium confidence"
+              : "⚠ Low confidence"}
+        </span>
+      )}
       {empty && <h4 className="sheet-empty-title">Not in your documents</h4>}
 
       <p className="sheet-answer">

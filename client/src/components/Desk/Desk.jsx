@@ -110,6 +110,7 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
                     citations={ex.result.citations}
                     sources={ex.result.sources}
                     isGuard={ex.result.kind === "guard"}
+                    confidence={ex.result.confidence}
                   />
                   {ex.result.kind !== "guard" && (
                     <AgentTrail

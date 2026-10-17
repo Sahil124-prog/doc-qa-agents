@@ -44,6 +44,20 @@ export async function ask(req, res) {
     documentId,
     chatHistory,
   });
+
+  const avgScore = result.sources?.length
+    ? result.sources.reduce((sum, s) => sum + (s.score ?? 0), 0) /
+      result.sources.length
+    : 0;
+  const confidence =
+    result.answer === "I don't know" || !result.sources?.length
+      ? null
+      : avgScore > 0.015
+        ? "high"
+        : avgScore > 0.012
+          ? "medium"
+          : "low";
+
   res.json({
     answer: result.answer,
     citations: result.citations,
@@ -54,5 +68,6 @@ export async function ask(req, res) {
     searchQueries: result.searchQueries,
     retries: result.retryCount,
     trace: result.trace,
+    confidence,
   });
 }

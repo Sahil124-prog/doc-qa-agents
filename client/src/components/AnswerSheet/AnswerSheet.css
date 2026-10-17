@@ -91,6 +91,32 @@
     /* soft lavender, friendly instead of red */
 }
 
+.sheet-confidence {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+}
+
+.sheet-confidence--high {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.sheet-confidence--medium {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.sheet-confidence--low {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+
 
 @media (max-width: 600px) {
     .sheet {
