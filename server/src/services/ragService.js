@@ -1,8 +1,10 @@
 import { getVectorStore } from "./ingestionService.js";
 import { llm } from "../config/ai.js";
 import { bm25Search } from "./bm25Service.js";
+import { rerank } from "./rerankService.js";
 
 export const TOP_K = 4;
+const CANDIDATES = 20;
 
 export async function retrieveChunks(question, userId, { documentId } = {}) {
   // Run both searches in parallel
@@ -49,28 +51,47 @@ export async function retrieveChunks(question, userId, { documentId } = {}) {
   });
 
   bm25Results.forEach(({ chunk }) => {
-    const id = chunk._id?.toString() ?? chunk.text.slice(0, 40);
+    const id = chunk.text.slice(0, 40); // same key as the RRF map
     if (!seen.has(id)) {
       seen.add(id);
       allDocs.push({ id, text: chunk.text, metadata: chunk });
     }
   });
 
-  // Sort by RRF score descending, take top TOP_K
-  return allDocs
+  // Stage 1: best CANDIDATES by RRF
+  const candidates = allDocs
     .sort((a, b) => (rrfScores.get(b.id) ?? 0) - (rrfScores.get(a.id) ?? 0))
-    .slice(0, TOP_K)
-    .map((doc, i) => ({
-      label: i + 1,
+    .slice(0, CANDIDATES)
+    .map((doc) => ({
       text: doc.text,
       fileName: doc.metadata.fileName,
       pageNumber: doc.metadata.pageNumber,
       documentId: doc.metadata.documentId,
       score: rrfScores.get(doc.id),
     }));
+
+  // Stage 2: cross-encoder reads question + chunk together, keeps the best TOP_K
+  let top;
+  try {
+    top = await rerank(question, candidates, TOP_K);
+  } catch (err) {
+    console.error("Rerank failed, using RRF order:", err.message);
+    top = candidates.slice(0, TOP_K);
+  }
+
+  // TEMP (Feature 7 calibration): see real reranker scores, remove after
+  // console.log(
+  //   "Rerank:",
+  //   top.map((s) => ({
+  //     page: s.pageNumber,
+  //     rrf: s.score?.toFixed(4),
+  //     rerank: s.rerankScore?.toFixed(3),
+  //   })),
+  // );
+
+  // Labels must be 1..TOP_K in the final order: citations use sources[label - 1]
+  return top.map((source, i) => ({ ...source, label: i + 1 }));
 }
-
-
 
 export const NOT_FOUND_MESSAGE = "I couldn't find this in your documents.";
 
@@ -97,7 +118,6 @@ function normalizeCitations(text) {
     .replace(/【\s*(\d+)[^】]*】/g, "[$1]")
     .replace(/\[(\d+)†[^\]]*\]/g, "[$1]");
 }
-
 
 export async function generateAnswer(
   question,

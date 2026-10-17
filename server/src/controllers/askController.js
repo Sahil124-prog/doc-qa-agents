@@ -47,19 +47,27 @@ export async function ask(req, res) {
     chatHistory,
   });
 
-  const avgScore = result.sources?.length
-    ? result.sources.reduce((sum, s) => sum + (s.score ?? 0), 0) /
-      result.sources.length
-    : 0;
-  const confidence =
-    result.answer === "I couldn't find this in your documents." ||
-    !result.sources?.length
-      ? null
-      : avgScore > 0.015
-        ? "high"
-        : avgScore > 0.012
-          ? "medium"
-          : "low";
+  // Feature 7: confidence from the reranker's best score (falls back to RRF)
+  let confidence = null;
+  const found =
+    result.sources?.length &&
+    result.answer !== "I couldn't find this in your documents.";
+
+  if (found) {
+    const topRerank = result.sources[0].rerankScore;
+
+    if (topRerank !== undefined) {
+      confidence =
+        topRerank >= 0.5 ? "high" : topRerank >= 0.1 ? "medium" : "low";
+    } else {
+      // Reranker failed and RRF order was used: keep the old rule
+      const avgScore =
+        result.sources.reduce((sum, s) => sum + (s.score ?? 0), 0) /
+        result.sources.length;
+      confidence =
+        avgScore > 0.015 ? "high" : avgScore > 0.012 ? "medium" : "low";
+    }
+  }
 
   // Feature 6: Q&A ko history mein save karo (background mein)
   QAHistory.create({

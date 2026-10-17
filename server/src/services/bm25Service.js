@@ -58,7 +58,10 @@ export async function loadBM25Index(userId, documentId) {
   if (documentId) filter.documentId = documentId;
 
   const chunks = await col
-    .find(filter, { projection: { text: 1, metadata: 1 } })
+    .find(filter, {
+      projection: { text: 1, fileName: 1, pageNumber: 1, documentId: 1 },
+    })
+    
     .toArray();
 
   if (chunks.length === 0) return { engine: null, chunks: [] };

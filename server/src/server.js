@@ -8,6 +8,8 @@ import askRoutes from "./routes/askRoutes.js";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 
+import { warmUpReranker } from "./services/rerankService.js"; 
+
 const app = express();
 
 app.set("trust proxy", 3);
@@ -86,6 +88,7 @@ if (modifiedCount > 0)
   console.log(`Marked ${modifiedCount} interrupted document(s) as failed`);
 
 
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`),
-);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  warmUpReranker(); // load the model in the background, don't block startup
+});
