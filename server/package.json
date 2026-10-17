@@ -28,7 +28,10 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.4",
     "multer": "^2.4.0",
-    "pdf-parse": "^2.4.5"
+    "pdf-parse": "^2.4.5",
+    "wink-bm25-text-search": "^3.1.2",
+    "wink-eng-lite-web-model": "^1.8.1",
+    "wink-nlp": "^2.4.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

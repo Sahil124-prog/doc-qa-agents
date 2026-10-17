@@ -1,30 +1,76 @@
 import { getVectorStore } from "./ingestionService.js";
 import { llm } from "../config/ai.js";
+import { bm25Search } from "./bm25Service.js";
 
 export const TOP_K = 4;
 
 export async function retrieveChunks(question, userId, { documentId } = {}) {
-  const userFilter = { userId: { $eq: userId } };
+  // Run both searches in parallel
+  const [vectorResults, bm25Results] = await Promise.all([
+    // Vector search — returns [[doc, score], ...]
+    getVectorStore().similaritySearchWithScore(question, 10, {
+      preFilter: documentId
+        ? {
+            $and: [
+              { userId: { $eq: userId } },
+              { documentId: { $eq: documentId } },
+            ],
+          }
+        : { userId: { $eq: userId } },
+    }),
+    // BM25 search — returns [{ chunk, rank }, ...]
+    bm25Search(question, userId, documentId, 10),
+  ]);
 
-  const preFilter = documentId
-    ? { $and: [userFilter, { documentId: { $eq: documentId } }] }
-    : userFilter;
+  // Build RRF score maps: chunkId → score
+  // RRF formula: 1 / (rank + 60)
+  const rrfScores = new Map();
 
-  const results = await getVectorStore().similaritySearchWithScore(
-    question,
-    TOP_K,
-    { preFilter },
-  );
+  vectorResults.forEach(([doc, _score], rank) => {
+    const id = doc.pageContent.slice(0, 40);
+    rrfScores.set(id, (rrfScores.get(id) ?? 0) + 1 / (rank + 60));
+  });
 
-  return results.map(([doc, score], i) => ({
-    label: i + 1,
-    text: doc.pageContent,
-    fileName: doc.metadata.fileName,
-    pageNumber: doc.metadata.pageNumber,
-    documentId: doc.metadata.documentId,
-    score,
-  }));
+  bm25Results.forEach(({ chunk, rank }) => {
+    const id = chunk.text.slice(0, 40);
+    rrfScores.set(id, (rrfScores.get(id) ?? 0) + 1 / (rank + 60));
+  });
+
+  // Merge both result sets — deduplicate by id
+  const seen = new Set();
+  const allDocs = [];
+
+  vectorResults.forEach(([doc]) => {
+    const id = doc.pageContent.slice(0, 40);
+    if (!seen.has(id)) {
+      seen.add(id);
+      allDocs.push({ id, text: doc.pageContent, metadata: doc.metadata });
+    }
+  });
+
+  bm25Results.forEach(({ chunk }) => {
+    const id = chunk._id?.toString() ?? chunk.text.slice(0, 40);
+    if (!seen.has(id)) {
+      seen.add(id);
+      allDocs.push({ id, text: chunk.text, metadata: chunk });
+    }
+  });
+
+  // Sort by RRF score descending, take top TOP_K
+  return allDocs
+    .sort((a, b) => (rrfScores.get(b.id) ?? 0) - (rrfScores.get(a.id) ?? 0))
+    .slice(0, TOP_K)
+    .map((doc, i) => ({
+      label: i + 1,
+      text: doc.text,
+      fileName: doc.metadata.fileName,
+      pageNumber: doc.metadata.pageNumber,
+      documentId: doc.metadata.documentId,
+      score: rrfScores.get(doc.id),
+    }));
 }
+
+
 
 export const NOT_FOUND_MESSAGE = "I couldn't find this in your documents.";
 

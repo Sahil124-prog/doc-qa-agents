@@ -1,22 +1,25 @@
-import mongoose from "mongoose";                                   // NEW
+import mongoose from "mongoose"; // NEW
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Document } from "@langchain/core/documents";
-import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";        // NEW
-import { embeddings } from "../config/ai.js";                         // NEW
+import { MongoDBAtlasVectorSearch } from "@langchain/mongodb"; // NEW
+import { embeddings } from "../config/ai.js"; // NEW
 
 // ---------- Part 1: PDF → chunks (unchanged) ----------
 
+import { invalidateBM25Cache } from "./bm25Service.js";
 import fs from "node:fs/promises";
 import DocumentModel from "../models/Document.js";
-
 
 const splitter = new RecursiveCharacterTextSplitter({
   chunkSize: 800,
   chunkOverlap: 150,
 });
 
-export async function loadAndSplitPdf(filePath, { documentId, userId, fileName }) {
+export async function loadAndSplitPdf(
+  filePath,
+  { documentId, userId, fileName },
+) {
   const loader = new PDFLoader(filePath);
   const pages = await loader.load();
 
@@ -32,7 +35,7 @@ export async function loadAndSplitPdf(filePath, { documentId, userId, fileName }
             fileName,
             pageNumber: page.metadata.loc.pageNumber,
           },
-        })
+        }),
     );
 
   const chunks = await splitter.splitDocuments(cleanPages);
@@ -61,7 +64,6 @@ export async function embedAndStoreChunks(chunks) {
   await getVectorStore().addDocuments(chunks);
 }
 
-
 // ---------- Part 3: the full pipeline for one uploaded document ----------
 
 export async function processDocument(doc, filePath) {
@@ -75,14 +77,17 @@ export async function processDocument(doc, filePath) {
     });
 
     if (chunks.length === 0) {
-      throw new Error("No readable text found in this PDF. It may be a scanned image.");
+      throw new Error(
+        "No readable text found in this PDF. It may be a scanned image.",
+      );
     }
-    
+
     if (pageCount > 100) {
       throw new Error("PDF is too long (maximum 100 pages).");
     }
 
     await embedAndStoreChunks(chunks);
+    invalidateBM25Cache(doc.userId.toString(), documentId); // ← yeh add karo
 
     await DocumentModel.findByIdAndUpdate(doc._id, {
       status: "ready",
