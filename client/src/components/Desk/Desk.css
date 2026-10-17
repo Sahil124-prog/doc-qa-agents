@@ -147,6 +147,18 @@
     margin-bottom: 4px;
 }
 
+/* Feature 8: blinking cursor while the answer streams in */
+.draft-cursor {
+    margin-left: 2px;
+    animation: draft-blink 1s steps(1) infinite;
+}
+
+@keyframes draft-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
 
 @media (max-width: 1200px) {
     .desk-answer {

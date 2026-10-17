@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { api,apiStream } from "../../api.js";
+import { api, apiStream } from "../../api.js";
 import AnswerSheet from "../AnswerSheet/AnswerSheet.jsx";
 import AgentTrail from "../AgentTrail/AgentTrail.jsx";
 import "./Desk.css";
@@ -59,43 +59,49 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
     );
   }
 
+  // Change one exchange based on its latest value (safe for many quick updates)
+  function patchExchange(id, change) {
+    setExchanges((current) =>
+      current.map((ex) => (ex.id === id ? { ...ex, ...change(ex) } : ex)),
+    );
+  }
+
   async function handleAsk(event) {
     event.preventDefault();
     const text = question.trim();
     if (!text || asking) return;
 
-        const id = Date.now();
-        setExchanges((current) => [
-          ...current,
-          { id, question: text, status: "loading", steps: [] },
-        ]);
-        setQuestion("");
+    const id = Date.now();
+    setExchanges((current) => [
+      ...current,
+      { id, question: text, status: "loading", steps: [], draft: "" },
+    ]);
+    setQuestion("");
 
-        try {
-          const result = await apiStream("/ask/stream", {
-            body: {
-              question: text,
-              documentId: scopeId || undefined,
-              chatHistory,
-            },
-            // Feature 8: each agent step shows up the moment the server sends it
-            onStep: (line) =>
-              setExchanges((current) =>
-                current.map((ex) =>
-                  ex.id === id ? { ...ex, steps: [...ex.steps, line] } : ex,
-                ),
-              ),
-          });
+    try {
+      const result = await apiStream("/ask/stream", {
+        body: {
+          question: text,
+          documentId: scopeId || undefined,
+          chatHistory,
+        },
+        // Feature 8: steps and answer tokens show up the moment the server sends them
+        onStep: (line) =>
+          patchExchange(id, (ex) => ({ steps: [...ex.steps, line] })),
+        onToken: (piece) =>
+          patchExchange(id, (ex) => ({ draft: ex.draft + piece })),
+        onReset: () => patchExchange(id, () => ({ draft: "" })),
+      });
 
-          updateExchange(id, { status: "done", result });
-          setChatHistory((prev) => [
-            ...prev,
-            { role: "user", content: text },
-            { role: "assistant", content: result.answer },
-          ]);
-        } catch (err) {
-          updateExchange(id, { status: "error", error: err.message });
-        }
+      updateExchange(id, { status: "done", result });
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "user", content: text },
+        { role: "assistant", content: result.answer },
+      ]);
+    } catch (err) {
+      updateExchange(id, { status: "error", error: err.message });
+    }
   }
 
   return (
@@ -160,7 +166,11 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
               {ex.status !== "error" && (
                 <div className="desk-answer">
                   {ex.status === "loading" ? (
-                    <Thinking />
+                    ex.draft ? (
+                      <DraftSheet text={ex.draft} />
+                    ) : (
+                      <Thinking />
+                    )
                   ) : (
                     <AnswerSheet
                       answer={ex.result.answer}
@@ -185,8 +195,6 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
                     />
                   )}
                 </div>
-
-                
               )}
             </motion.div>
           ))}
@@ -225,5 +233,25 @@ function Thinking() {
       </span>
       Searching your documents…
     </div>
+  );
+}
+
+// Feature 8: the answer while it is still being written.
+// Citation markers are hidden here; the final answer (from "done") shows them as page badges.
+function DraftSheet({ text }) {
+  const clean = text
+    .replace(/【[^】]*】?/g, "") // gpt-oss style 【1†L1-L3】, even half-written
+    .replace(/\[[\d,\s]*\]?/g, "") // [1] or [1, 2], even half-written
+    .replace(/\*\*/g, ""); // Markdown bold markers
+
+  return (
+    <article className="sheet">
+      <p className="sheet-answer">
+        {clean}
+        <span className="draft-cursor" aria-hidden="true">
+          ▍
+        </span>
+      </p>
+    </article>
   );
 }

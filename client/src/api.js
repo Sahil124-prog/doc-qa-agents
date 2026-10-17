@@ -90,7 +90,7 @@ async function readEventStream(response, onEvent) {
 
 // POSTs a question and streams the agent's work back.
 // Calls onStep(text) for every agent step, resolves with the final answer.
-export async function apiStream(path, { body, onStep } = {}) {
+export async function apiStream(path, { body, onStep, onToken, onReset } = {}) {
   const headers = { "Content-Type": "application/json" };
   const token = localStorage.getItem(TOKEN_KEY);
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -115,11 +115,13 @@ export async function apiStream(path, { body, onStep } = {}) {
   }
 
   let result;
-  await readEventStream(response, (event, data) => {
-    if (event === "step") onStep?.(data.text);
-    else if (event === "done") result = data;
-    else if (event === "error") throw new Error(data.message);
-  });
+    await readEventStream(response, (event, data) => {
+      if (event === "step") onStep?.(data.text);
+      else if (event === "token") onToken?.(data.text);
+      else if (event === "reset") onReset?.();
+      else if (event === "done") result = data;
+      else if (event === "error") throw new Error(data.message);
+    });
 
   if (!result) throw new Error("The answer stopped halfway. Please try again.");
   return result;

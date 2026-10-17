@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import "./AnswerSheet.css";
 
-const CITATION = /\[(\d+(?:\s*,\s*\d+)*)\]/g; // [1] or [1, 3]
+const CITATION = /[ \t]*\[(\d+(?:\s*,\s*\d+)*)\]/g; // [1] or [1, 3], plus the space before it
 // Key facts to highlight: an amount with a unit ("60 days", "3 years") or a currency amount ("INR 1,200")
 const KEY_FACT =
   /((?:INR|USD|Rs\.?|₹|\$)\s?\d[\d,.]*|\d[\d,.]*\s?(?:%|minutes?|days?|weeks?|months?|years?|hours?)\b)/g;

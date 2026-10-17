@@ -11,6 +11,8 @@
     line-height: 1.6;
     font-weight: 500;
     max-width: 62ch;
+    white-space: pre-line;
+    /* keep the line breaks the model writes */
 }
 
 /* Highlighter band behind key numbers; its width animates from 0% to 100% */
