@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { api } from "../../api.js";
+import { api,apiStream } from "../../api.js";
 import AnswerSheet from "../AnswerSheet/AnswerSheet.jsx";
 import AgentTrail from "../AgentTrail/AgentTrail.jsx";
 import "./Desk.css";
@@ -64,27 +64,38 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
     const text = question.trim();
     if (!text || asking) return;
 
-    const id = Date.now();
-    setExchanges((current) => [
-      ...current,
-      { id, question: text, status: "loading" },
-    ]);
-    setQuestion("");
+        const id = Date.now();
+        setExchanges((current) => [
+          ...current,
+          { id, question: text, status: "loading", steps: [] },
+        ]);
+        setQuestion("");
 
-    try {
-      const result = await api("/ask", {
-        method: "POST",
-        body: { question: text, documentId: scopeId || undefined, chatHistory },
-      });
-      updateExchange(id, { status: "done", result });
-      setChatHistory((prev) => [
-        ...prev,
-        { role: "user", content: text },
-        { role: "assistant", content: result.answer },
-      ]);
-    } catch (err) {
-      updateExchange(id, { status: "error", error: err.message });
-    }
+        try {
+          const result = await apiStream("/ask/stream", {
+            body: {
+              question: text,
+              documentId: scopeId || undefined,
+              chatHistory,
+            },
+            // Feature 8: each agent step shows up the moment the server sends it
+            onStep: (line) =>
+              setExchanges((current) =>
+                current.map((ex) =>
+                  ex.id === id ? { ...ex, steps: [...ex.steps, line] } : ex,
+                ),
+              ),
+          });
+
+          updateExchange(id, { status: "done", result });
+          setChatHistory((prev) => [
+            ...prev,
+            { role: "user", content: text },
+            { role: "assistant", content: result.answer },
+          ]);
+        } catch (err) {
+          updateExchange(id, { status: "error", error: err.message });
+        }
   }
 
   return (
@@ -142,28 +153,40 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
               )}
               <h3 className="desk-question">{ex.question}</h3>
 
-              {ex.status === "loading" && <Thinking />}
-
               {ex.status === "error" && (
                 <p className="desk-error">{ex.error}</p>
               )}
 
-              {ex.status === "done" && (
+              {ex.status !== "error" && (
                 <div className="desk-answer">
-                  <AnswerSheet
-                    answer={ex.result.answer}
-                    citations={ex.result.citations}
-                    sources={ex.result.sources}
-                    isGuard={ex.result.kind === "guard"}
-                    confidence={ex.result.confidence}
-                  />
-                  {ex.result.kind !== "guard" && !ex.fromHistory && (
-                    <AgentTrail
-                      trace={ex.result.trace}
+                  {ex.status === "loading" ? (
+                    <Thinking />
+                  ) : (
+                    <AnswerSheet
+                      answer={ex.result.answer}
                       citations={ex.result.citations}
+                      sources={ex.result.sources}
+                      isGuard={ex.result.kind === "guard"}
+                      confidence={ex.result.confidence}
+                    />
+                  )}
+
+                  {/* Same spot while loading and after: React keeps it, so steps don't replay */}
+                  {(ex.status === "loading"
+                    ? ex.steps.length > 0
+                    : ex.result.kind !== "guard" && !ex.fromHistory) && (
+                    <AgentTrail
+                      trace={
+                        ex.status === "loading" ? ex.steps : ex.result.trace
+                      }
+                      citations={
+                        ex.status === "loading" ? [] : ex.result.citations
+                      }
                     />
                   )}
                 </div>
+
+                
               )}
             </motion.div>
           ))}

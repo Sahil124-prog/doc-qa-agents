@@ -205,3 +205,32 @@ export async function runAgent(
     searchQuery: question,
   });
 }
+
+// Feature 8: same agent, but hands back each step the moment a node finishes
+export async function* streamAgent(
+  question,
+  userId,
+  { documentId, chatHistory = [], signal } = {},
+) {
+  const stream = await graph.stream(
+    { question, userId, documentId, chatHistory, searchQuery: question },
+    { streamMode: ["updates", "values"], signal },
+  );
+
+  let finalState;
+
+  for await (const [mode, chunk] of stream) {
+    if (mode === "updates") {
+      // chunk looks like { retrieve: { trace: ["retrieve: ..."] } }
+      for (const update of Object.values(chunk)) {
+        for (const line of update?.trace ?? []) {
+          yield { type: "step", text: line };
+        }
+      }
+    } else {
+      finalState = chunk; // "values" = the full state after each node
+    }
+  }
+
+  yield { type: "result", state: finalState };
+}
