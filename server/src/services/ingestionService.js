@@ -11,6 +11,8 @@ import { invalidateBM25Cache } from "./bm25Service.js";
 import fs from "node:fs/promises";
 import DocumentModel from "../models/Document.js";
 
+import { llm } from "../config/ai.js";
+
 const splitter = new RecursiveCharacterTextSplitter({
   chunkSize: 800,
   chunkOverlap: 150,
@@ -64,6 +66,30 @@ export async function embedAndStoreChunks(chunks) {
   await getVectorStore().addDocuments(chunks);
 }
 
+export async function generateDocumentSummary(chunks) {
+  // First 5 chunks lo — document ka shuruat wala content
+  const sampleText = chunks
+    .slice(0, 5)
+    .map((c) => c.pageContent)
+    .join("\n\n");
+
+  const response = await llm.invoke([
+    {
+      role: "system",
+      content:
+        "You are a document summarizer. Give a concise 2-3 line summary of what this document is about. Be specific, not generic.",
+    },
+    {
+      role: "user",
+      content: `Summarize this document:\n\n${sampleText}`,
+    },
+  ]);
+
+  return response.text.trim();
+}
+
+
+
 // ---------- Part 3: the full pipeline for one uploaded document ----------
 
 export async function processDocument(doc, filePath) {
@@ -89,11 +115,16 @@ export async function processDocument(doc, filePath) {
     await embedAndStoreChunks(chunks);
     invalidateBM25Cache(doc.userId.toString(), documentId); // ← yeh add karo
 
+    const summary = await generateDocumentSummary(chunks); // ← add karo
+
     await DocumentModel.findByIdAndUpdate(doc._id, {
       status: "ready",
       pageCount,
       chunkCount: chunks.length,
+      summary, // ← add karo
     });
+
+    
     console.log(`Document ${documentId} ready: ${chunks.length} chunks`);
   } catch (err) {
     console.error(`Document ${documentId} failed:`, err.message);

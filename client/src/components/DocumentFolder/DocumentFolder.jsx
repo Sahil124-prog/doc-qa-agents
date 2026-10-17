@@ -68,6 +68,7 @@ export default function DocumentFolder({ doc, selected, onSelect, onDelete }) {
       >
         <span className="folder-name">{doc.fileName}</span>
         <span className="folder-meta">{describe(doc)}</span>
+        {doc.summary && (<span className="folder-summary">{doc.summary}</span>)}
       </button>
 
       {canDelete && (

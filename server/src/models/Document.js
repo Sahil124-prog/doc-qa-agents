@@ -17,6 +17,7 @@ const documentSchema = new mongoose.Schema(
     pageCount: { type: Number, default: 0 },
     chunkCount: { type: Number, default: 0 },
     errorMessage: { type: String },
+    summary: { type: String },
   },
   { timestamps: true },
 );
