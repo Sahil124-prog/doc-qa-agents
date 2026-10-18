@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getOpenChat, saveOpenChat } from "../../api.js";
+
 import { motion } from "motion/react";
 import { useDocuments } from "../../hooks/useDocuments.js";
 import Brand from "../Brand/Brand.jsx";
 import Shelf from "../Shelf/Shelf.jsx";
 import Desk from "../Desk/Desk.jsx";
+import ChatList from "../ChatList/ChatList.jsx";
+
 import "./Workspace.css";
 
 export default function Workspace({ user, onLogout }) {
@@ -11,15 +15,47 @@ export default function Workspace({ user, onLogout }) {
     useDocuments();
 
   // Which document questions are limited to ("" = all documents)
-  const [scopeId, setScopeId] = useState("");
+  const [scopeId, setScopeId] = useState(() => getOpenChat().scopeId ?? "");
+
+  // Which chat is open (null = a new, empty chat) and a counter that tells the list to reload
+  const [chatId, setChatId] = useState(() => getOpenChat().chatId ?? null);
+
+  const [chatsVersion, setChatsVersion] = useState(0);
+  const refreshChats = () => setChatsVersion((v) => v + 1);
+
+  // Feature 10: keep the open chat through a page refresh
+  useEffect(() => {
+    saveOpenChat({ chatId, scopeId });
+  }, [chatId, scopeId]);
 
   const readyDocuments = documents.filter((doc) => doc.status === "ready");
 
-  // If the deleted document was the one being searched, go back to "All documents"
   async function handleDelete(id) {
     const deleted = await remove(id);
-    if (deleted && scopeId === id) setScopeId("");
+    if (deleted && scopeId === id) {
+      setScopeId("");
+      setChatId(null); // its chats were deleted on the server too
+    }
+    if (deleted) refreshChats();
     return deleted;
+  }
+
+  // Picking another document (dropdown or folder) starts a new chat
+  function changeScope(id) {
+    setScopeId(id);
+    setChatId(null);
+  }
+
+  // Opening an old chat also switches to the document it was about
+  function openChat(chat) {
+    setChatId(chat._id);
+    setScopeId(chat.documentId ?? "");
+  }
+
+  // The first answer of a new chat created it on the server
+  function handleChatStarted(id) {
+    setChatId(id);
+    refreshChats();
   }
 
   return (
@@ -42,20 +78,32 @@ export default function Workspace({ user, onLogout }) {
       </motion.header>
 
       <main className="workspace-main">
-        <Shelf
-          documents={documents}
-          loading={loading}
-          uploading={uploading}
-          error={error}
-          onUpload={upload}
-          onDelete={handleDelete}
-          scopeId={scopeId}
-          onSelect={setScopeId}
-        />
+        <aside className="workspace-side">
+          <Shelf
+            documents={documents}
+            loading={loading}
+            uploading={uploading}
+            error={error}
+            onUpload={upload}
+            onDelete={handleDelete}
+            scopeId={scopeId}
+            onSelect={changeScope}
+          />
+          <ChatList
+            activeId={chatId}
+            version={chatsVersion}
+            onOpen={openChat}
+            onNewChat={() => setChatId(null)}
+          />
+        </aside>
         <Desk
           readyDocuments={readyDocuments}
           scopeId={scopeId}
-          onScopeChange={setScopeId}
+          onScopeChange={changeScope}
+          chatId={chatId}
+          onChatStarted={handleChatStarted}
+          onChatActivity={refreshChats}
+          onChatMissing={() => setChatId(null)}
         />
       </main>
     </div>

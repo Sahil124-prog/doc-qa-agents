@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import DocumentModel from "../models/Document.js";
 import fs from "node:fs/promises";
 import QAHistory from "../models/QAHistory.js";
+import Conversation from "../models/Conversation.js"; 
 
 
 import {
@@ -85,7 +86,9 @@ export async function deleteDocument(req, res) {
   });
 
   await QAHistory.deleteMany({ documentId: id, userId: req.userId });
+  await Conversation.deleteMany({ documentId: id, userId: req.userId });
   await DocumentModel.deleteOne({ _id: id });
+
 
   res.json({ deleted: id });
 }

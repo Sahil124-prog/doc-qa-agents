@@ -1,11 +1,14 @@
 const TOKEN_KEY = "folio_token";
 const USER_KEY = "folio_user";
+const CHAT_KEY = "folio_open_chat";
+
 
 // ---------- Session (token + user) stored in the browser ----------
 
 export function saveSession({ token, user }) {
   localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(USER_KEY, JSON.stringify(user));
+  sessionStorage.removeItem(CHAT_KEY);
 }
 
 export function getSavedUser() {
@@ -17,6 +20,24 @@ export function getSavedUser() {
 export function clearSession() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
+  sessionStorage.removeItem(CHAT_KEY);
+}
+
+// Feature 10: remember the open chat across page refreshes (this tab only)
+export function getOpenChat() {
+  try {
+    return JSON.parse(sessionStorage.getItem(CHAT_KEY)) ?? {};
+  } catch {
+    return {};
+  }
+}
+
+export function saveOpenChat(value) {
+  try {
+    sessionStorage.setItem(CHAT_KEY, JSON.stringify(value));
+  } catch {
+    // storage can be blocked (private mode); the app still works, it just won't remember
+  }
 }
 
 // ---------- One function for every request to our API ----------

@@ -1,0 +1,128 @@
+.chats {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.chats-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.chats-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+}
+
+.chats-new {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: var(--marigold);
+    box-shadow: 2px 2px 0 var(--ink);
+    transition: transform 0.12s;
+}
+
+.chats-new:hover {
+    transform: translate(-1px, -1px);
+}
+
+.chats-empty {
+    font-size: 14px;
+    color: var(--ink-soft);
+}
+
+.chats-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+}
+
+.chats-item {
+    position: relative;
+    border: 1.5px solid transparent;
+    border-radius: 12px;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.chats-item:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.chats-item.is-active {
+    background: var(--paper);
+    border-color: var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+.chats-open {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 0;
+    padding: 9px 44px 9px 12px;
+    /* room on the right for the delete button */
+}
+
+.chats-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chats-date {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+}
+
+/* Delete button shows on hover or keyboard focus, like the document folders */
+.chats-delete {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    min-width: 26px;
+    height: 26px;
+    padding: 0 7px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.chats-item:hover .chats-delete,
+.chats-item:focus-within .chats-delete,
+.chats-delete.is-confirming {
+    opacity: 1;
+}
+
+.chats-delete.is-confirming {
+    background: var(--rose);
+    color: #fff;
+    font-size: 12px;
+}
+
+@media (hover: none) {
+    .chats-delete {
+        opacity: 1;
+    }
+}

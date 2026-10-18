@@ -5,6 +5,8 @@ import authRoutes from "./routes/authRoutes.js";
 import documentRoutes from "./routes/documentRoutes.js";
 import DocumentModel from "./models/Document.js";
 import askRoutes from "./routes/askRoutes.js";
+import conversationRoutes from "./routes/conversationRoutes.js";
+
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 
@@ -46,6 +48,9 @@ const askLimiter = rateLimit({
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/ask", askLimiter, askRoutes);
+app.use("/api/conversations", conversationRoutes);
+
+
 
 app.use((err, req, res, next) => {
   // AI provider quota / rate limit

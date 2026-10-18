@@ -5,7 +5,15 @@ import AnswerSheet from "../AnswerSheet/AnswerSheet.jsx";
 import AgentTrail from "../AgentTrail/AgentTrail.jsx";
 import "./Desk.css";
 
-export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
+export default function Desk({
+  readyDocuments,
+  scopeId,
+  onScopeChange,
+  chatId,
+  onChatStarted,
+  onChatActivity,
+  onChatMissing,
+}) {
   const [question, setQuestion] = useState("");
   const [exchanges, setExchanges] = useState([]); // [{ id, question, status, result, error }]
   const endRef = useRef(null);
@@ -19,41 +27,59 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [exchanges]);
 
-  // Feature 6: document change hone pe us document ki history load karo
-  useEffect(() => {
-    let ignore = false;
-    const query = scopeId ? `?documentId=${scopeId}` : "";
+  // Remembers a chat this Desk just created, so opening it doesn't reload the feed
+  const ownChatRef = useRef(null);
 
-    api(`/ask/history${query}`)
-      .then((items) => {
-        if (ignore) return; // user ne beech mein doosra document select kar liya
+  // Feature 10: a new chat starts with a clean desk; an old chat loads its messages
+  useEffect(() => {
+    if (chatId && chatId === ownChatRef.current) {
+      ownChatRef.current = null; // already on screen: we just asked its first question
+      return;
+    }
+
+    setExchanges([]);
+    setChatHistory([]);
+    if (!chatId) return;
+
+    let ignore = false;
+    api(`/conversations/${chatId}`)
+      .then(({ messages }) => {
+        if (ignore) return; // the user opened another chat meanwhile
         setExchanges(
-          items.reverse().map((item) => ({
-            id: item._id,
-            question: item.question,
+          messages.map((m) => ({
+            id: m._id,
+            question: m.question,
             status: "done",
             fromHistory: true,
-            askedAt: item.createdAt,
+            askedAt: m.createdAt,
             result: {
-              answer: item.answer,
-              citations: item.citations,
+              answer: m.answer,
+              citations: m.citations,
               sources: [],
-              confidence: item.confidence,
-              historyId: item._id, // Feature 9
-              feedback: item.feedback, // Feature 9: show what was picked before
+              confidence: m.confidence,
+              historyId: m._id, // Feature 9
+              feedback: m.feedback,
             },
           })),
         );
-        setChatHistory([]); // naya document = nayi conversation
+        // Carry on the conversation: the LLM gets the last 2 turns as memory
+        setChatHistory(
+          messages.slice(-2).flatMap((m) => [
+            { role: "user", content: m.question },
+            { role: "assistant", content: m.answer },
+          ]),
+        );
       })
       .catch(() => {
-        if (!ignore) setExchanges([]);
+        if (ignore) return;
+        setExchanges([]);
+        onChatMissing(); // the saved chat was deleted (or isn't yours): start a new one
       });
 
     return () => {
       ignore = true;
     };
-  }, [scopeId]);
+  }, [chatId]);
 
   function updateExchange(id, changes) {
     setExchanges((current) =>
@@ -85,6 +111,7 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
         body: {
           question: text,
           documentId: scopeId || undefined,
+          conversationId: chatId || undefined,
           chatHistory,
         },
         // Feature 8: steps and answer tokens show up the moment the server sends them
@@ -96,6 +123,15 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
       });
 
       updateExchange(id, { status: "done", result });
+
+      // Feature 10: the first answer of a new chat created it; later answers move it to the top
+      if (result.conversationId && !chatId) {
+        ownChatRef.current = result.conversationId;
+        onChatStarted(result.conversationId);
+      } else if (result.conversationId) {
+        onChatActivity();
+      }
+
       setChatHistory((prev) => [
         ...prev,
         { role: "user", content: text },

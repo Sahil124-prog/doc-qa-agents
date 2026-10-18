@@ -53,3 +53,15 @@
         padding: 4px 20px 24px;
     }
 }
+
+
+
+/* Left column: documents on top, chats below, scrolling together */
+.workspace-side {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+}
