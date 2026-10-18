@@ -2,17 +2,22 @@ import { useEffect, useState } from "react";
 import { api } from "../../api.js";
 import "./ChatList.css";
 
-// "Today", "Yesterday", or a short date like "18 Oct"
-function shortDate(iso) {
-  const day = new Date(iso).toDateString();
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-  if (day === today.toDateString()) return "Today";
-  if (day === yesterday.toDateString()) return "Yesterday";
-  return new Date(iso).toLocaleDateString(undefined, {
+// "Today, 3:14 PM", "Yesterday, 9:00 AM", then "16 Oct" (and the year if it's not this year)
+function chatTime(iso) {
+  const date = new Date(iso);
+  const now = new Date();
+  const time = date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  if (date.toDateString() === now.toDateString()) return `Today, ${time}`;
+  if (date.toDateString() === yesterday.toDateString()) return `Yesterday, ${time}`;
+
+  return date.toLocaleDateString(undefined, {
     day: "numeric",
     month: "short",
+    ...(date.getFullYear() !== now.getFullYear() && { year: "numeric" }),
   });
 }
 
@@ -75,7 +80,7 @@ export default function ChatList({ activeId, version, onOpen, onNewChat }) {
               aria-current={chat._id === activeId ? "true" : undefined}
             >
               <span className="chats-name">{chat.title}</span>
-              <span className="chats-date">{shortDate(chat.updatedAt)}</span>
+              <span className="chats-date">{chatTime(chat.updatedAt)}</span>
             </button>
             <button
               type="button"
