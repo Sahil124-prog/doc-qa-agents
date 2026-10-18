@@ -1,6 +1,6 @@
 import { runAgent,streamAgent } from "../agent/qaAgent.js";
 import { checkQuestion, classifyQuestion } from "../services/questionGuard.js";
-import QAHistory from "../models/QAHistory.js";
+import QAHistory, { FEEDBACK_REASONS } from "../models/QAHistory.js";
 import mongoose from "mongoose";
 
 
@@ -80,17 +80,31 @@ function getConfidence(result) {
 function finishAnswer(req, { question, documentId }, result) {
   const confidence = getConfidence(result);
 
+  // Feature 9: make the id now, so the reply can carry it before the save finishes
+  const historyId = new mongoose.Types.ObjectId();
+
   // Feature 6: Q&A ko history mein save karo (background mein)
   QAHistory.create({
+    _id: historyId,
     userId: req.userId,
     documentId: documentId || null,
     question,
     answer: result.answer,
     citations: result.citations,
     confidence,
+    // Feature 9: snapshot of what the agent saw (pages and scores, not the full text)
+    sources: result.sources.map((s) => ({
+      fileName: s.fileName,
+      pageNumber: s.pageNumber,
+      score: s.score,
+      rerankScore: s.rerankScore,
+    })),
+    searchQueries: result.searchQueries ?? [],
+    retries: result.retryCount ?? 0,
   }).catch((err) => console.error("History save failed:", err.message));
 
   return {
+    historyId, // Feature 9: the frontend sends feedback for this id
     answer: result.answer,
     citations: result.citations,
     sources: result.sources.map(({ text, ...rest }) => ({
@@ -199,4 +213,36 @@ export async function getHistory(req, res) {
     .lean();
 
   res.json(history);
+}
+
+// Feature 9: thumbs up / down on one answer
+// Body: { rating: 1 | -1 | null, reason?: one of FEEDBACK_REASONS (only with -1) }
+export async function setFeedback(req, res) {
+  const { id } = req.params;
+  const { rating, reason = null } = req.body ?? {};
+
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(404).json({ message: "Answer not found" });
+  }
+  if (![1, -1, null].includes(rating)) {
+    return res.status(400).json({ message: "rating must be 1, -1 or null" });
+  }
+  if (reason !== null && (rating !== -1 || !FEEDBACK_REASONS.includes(reason))) {
+    return res.status(400).json({ message: "Invalid reason" });
+  }
+
+  const updated = await QAHistory.findOneAndUpdate(
+    { _id: id, userId: req.userId }, // only your own answers
+    { feedback: { rating, reason, at: rating === null ? null : new Date() } },
+    { returnDocument: "after", runValidators: true, projection: { feedback: 1 } },
+  ).lean();
+
+  if (!updated) {
+    // Rare: clicked before the background save finished (see Feature 9 notes)
+    return res
+      .status(404)
+      .json({ message: "Couldn't save your feedback. Please try again." });
+  }
+
+  res.json({ feedback: updated.feedback });
 }

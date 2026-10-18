@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import "./AnswerSheet.css";
+import Feedback from "../Feedback/Feedback.jsx";
+
 
 const CITATION = /[ \t]*\[(\d+(?:\s*,\s*\d+)*)\]/g; // [1] or [1, 3], plus the space before it
 // Key facts to highlight: an amount with a unit ("60 days", "3 years") or a currency amount ("INR 1,200")
@@ -29,6 +31,8 @@ export default function AnswerSheet({
   sources,
   isGuard,
   confidence,
+  historyId,
+  feedback,
 }) {
   const [openLabel, setOpenLabel] = useState(null);
 
@@ -132,6 +136,11 @@ export default function AnswerSheet({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Feature 9: only real answers that were saved can get feedback */}
+      {historyId && !isGuard && (
+        <Feedback historyId={historyId} initial={feedback} />
+      )}
     </motion.article>
   );
 }

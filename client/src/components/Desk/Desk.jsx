@@ -39,6 +39,8 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
               citations: item.citations,
               sources: [],
               confidence: item.confidence,
+              historyId: item._id, // Feature 9
+              feedback: item.feedback, // Feature 9: show what was picked before
             },
           })),
         );
@@ -178,6 +180,8 @@ export default function Desk({ readyDocuments, scopeId, onScopeChange }) {
                       sources={ex.result.sources}
                       isGuard={ex.result.kind === "guard"}
                       confidence={ex.result.confidence}
+                      historyId={ex.result.historyId}
+                      feedback={ex.result.feedback}
                     />
                   )}
 
